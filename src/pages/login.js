@@ -2,7 +2,7 @@ import Head from "next/head";
 import Layout from "../layout/layout";
 import styles from "../styles/Form.module.css";
 // npm install react-icons --save
-import { HiAtSymbol, HiFingerPrint } from "react-icons/hi";
+import { HiAtSymbol, HiEye } from "react-icons/hi";
 import { useState } from "react";
 import { signIn, signOut } from "next-auth/react";
 // npm install formik --save
@@ -94,7 +94,7 @@ export default function Login() {
               className="icon flex items-center px-4"
               onClick={() => setShow(!show)}
             >
-              <HiFingerPrint size={25} />
+              <HiEye size={25} />
             </span>
           </div>
           {/* {formik.errors.password && formik.touched.password ? (
@@ -116,7 +116,7 @@ export default function Login() {
 
 // On  loading /login, create a default admin user
 export async function getStaticProps() {
-  console.log("Creating default admin user (getStaticProps)");
+  console.log("Creating default admin user");
 
   try {
     const defaultAdminUser = await prisma.user.create({

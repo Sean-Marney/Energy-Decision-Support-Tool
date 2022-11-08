@@ -2,7 +2,7 @@ import Head from "next/head";
 import Layout from "../layout/layout";
 import styles from "../styles/Form.module.css";
 // npm install react-icons --save
-import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from "react-icons/hi";
+import { HiAtSymbol, HiEye } from "react-icons/hi";
 import { useState } from "react";
 // npm install formik --save
 import { useFormik } from "formik";
@@ -90,7 +90,7 @@ export default function Register() {
               className="icon flex items-center px-4"
               onClick={() => setShow({ ...show, password: !show.password })}
             >
-              <HiFingerPrint size={25} />
+              <HiEye size={25} />
             </span>
           </div>
 
@@ -112,7 +112,7 @@ export default function Register() {
               className="icon flex items-center px-4"
               onClick={() => setShow({ ...show, cpassword: !show.cpassword })}
             >
-              <HiFingerPrint size={25} />
+              <HiEye size={25} />
             </span>
           </div>
 
