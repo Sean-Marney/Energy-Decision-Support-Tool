@@ -9,9 +9,9 @@ export default function loginValidate(values) {
 
   if (!values.password) {
     errors.password = "Required";
-  } else if (values.password.length < 8 || values.password.length > 20) {
+  } else if (values.password.length < 5 || values.password.length > 20) {
     errors.password =
-      "Password must be greater than 8 characters and less than 20 characters";
+      "Password must be greater than 5 characters and less than 20 characters";
   } else if (values.password.includes(" ")) {
     errors.password = "Invalid password";
   }
@@ -30,9 +30,9 @@ export function registerValidate(values) {
 
   if (!values.password) {
     errors.password = "Required";
-  } else if (values.password.length < 8 || values.password.length > 20) {
+  } else if (values.password.length < 5 || values.password.length > 20) {
     errors.password =
-      "Password must be greater than 8 characters and less than 20 characters";
+      "Password must be greater than 5 characters and less than 20 characters";
   } else if (values.password.includes(" ")) {
     errors.password = "Invalid password";
   }

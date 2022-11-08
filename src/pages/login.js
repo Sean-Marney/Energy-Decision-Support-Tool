@@ -9,6 +9,8 @@ import { signIn, signOut } from "next-auth/react";
 import { useFormik } from "formik";
 import loginValidate from "../lib/validate";
 import { useRouter } from "next/router";
+import { prisma } from "../lib/prisma";
+import { hash } from "bcrypt";
 
 export default function Login() {
   const [show, setShow] = useState(false);
@@ -110,4 +112,29 @@ export default function Login() {
       </section>
     </Layout>
   );
+}
+
+// On  loading /login, create a default admin user
+export async function getStaticProps() {
+  console.log("Creating default admin user (getStaticProps)");
+
+  try {
+    const defaultAdminUser = await prisma.user.create({
+      data: {
+        email: "admin@e2s.com",
+        password: await hash("admin123", 12),
+      },
+    });
+    return {
+      props: {
+        defaultAdminUser,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        message: "Admin already created",
+      },
+    };
+  }
 }
