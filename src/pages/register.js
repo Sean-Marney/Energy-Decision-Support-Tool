@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { registerValidate } from "../lib/validate";
 import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 
 export default function Register() {
   const [show, setShow] = useState({ password: false, cpassword: false });
@@ -124,4 +125,24 @@ export default function Register() {
       </section>
     </Layout>
   );
+}
+
+// Protecting /register route from unauthorised users
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  // Unauthorised user is redirected to /login
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // Authorised user is returned session
+  return {
+    props: { session },
+  };
 }

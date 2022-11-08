@@ -61,15 +61,6 @@ function User({ session, handleSignOut }) {
       <div className="flex justify-center">
         <Link
           className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
-          href={"/profile"}
-        >
-          Profile Page
-        </Link>
-      </div>
-
-      <div className="flex justify-center">
-        <Link
-          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
           href={"/register"}
         >
           Register a New User
