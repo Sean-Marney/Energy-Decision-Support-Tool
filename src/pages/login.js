@@ -11,6 +11,8 @@ import loginValidate from "../lib/validate";
 import { useRouter } from "next/router";
 import { prisma } from "../lib/prisma";
 import { hash } from "bcrypt";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [show, setShow] = useState(false);
@@ -35,10 +37,19 @@ export default function Login() {
     if (submitStatus.ok) {
       router.push(submitStatus.url);
     }
+
+    if (submitStatus.error) {
+      toast.error("Invalid credentials provided");
+    }
   }
 
   return (
     <Layout>
+      {/* Invalid credentials toast message */}
+      <div>
+        <ToastContainer />
+      </div>
+
       <Head>
         <title>Login</title>
       </Head>

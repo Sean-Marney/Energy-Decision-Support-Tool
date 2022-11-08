@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { getSession, useSession, signOut } from "next-auth/react";
+import Layout from "../layout/layout";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -11,14 +12,16 @@ export default function Home() {
   }
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Home</title>
-      </Head>
+    <Layout>
+      <div className={styles.container}>
+        <Head>
+          <title>Home</title>
+        </Head>
 
-      {/* If session is true, display user page, else display guest page */}
-      {session ? User({ session, handleSignOut }) : Guest()}
-    </div>
+        {/* If session is true, display user page, else display guest page */}
+        {session ? User({ session, handleSignOut }) : Guest()}
+      </div>
+    </Layout>
   );
 }
 
