@@ -10,7 +10,7 @@
     "devStart": "nodemon script.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.5.0",
+    "@prisma/client": "^4.6.0",
     "@types/node": "^18.11.9",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",

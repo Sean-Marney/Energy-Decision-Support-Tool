@@ -125,26 +125,32 @@ export default function Login() {
   );
 }
 
-// On  loading /login, create a default admin user
+// On  loading /login, create default admin and manager user
 export async function getStaticProps() {
-  console.log("Creating default admin user");
+  console.log("Creating default users");
 
   try {
-    const defaultAdminUser = await prisma.user.create({
+    const defaultUsers = await prisma.user.create({
       data: {
         email: "admin@e2s.com",
         password: await hash("admin123", 12),
+        role: "admin",
+      },
+      data: {
+        email: "manager@cardiff.com",
+        password: await hash("manager123", 12),
+        role: "manager",
       },
     });
     return {
       props: {
-        defaultAdminUser,
+        defaultUsers,
       },
     };
   } catch (error) {
     return {
       props: {
-        message: "Admin already created",
+        message: "Default users already created",
       },
     };
   }

@@ -18,6 +18,7 @@ export default function Register() {
       email: "",
       password: "",
       cpassword: "",
+      role: "",
     },
     validate: registerValidate,
     onSubmit,
@@ -116,6 +117,17 @@ export default function Register() {
             </span>
           </div>
 
+          {/* TODO: change role input to a dropdown */}
+          <div className={`${styles.input_group}`}>
+            <input
+              className={styles.input_text}
+              type="text"
+              name="role"
+              placeholder="Role"
+              {...formik.getFieldProps("role")}
+            />
+          </div>
+
           <div className="input-button">
             <button className={styles.button} type="submit">
               Register
@@ -127,22 +139,46 @@ export default function Register() {
   );
 }
 
-// Protecting /register route from unauthorised users
+// Protects route
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
-  // Unauthorised user is redirected to /login
-  if (!session) {
+  // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
+  // TODO - Only have one instance of this code to reduce repeated code
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: session.user.email,
+      },
+    });
+  } catch (error) {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/home",
         permanent: false,
       },
     };
   }
 
-  // Authorised user is returned session
-  return {
-    props: { session },
-  };
+  // Gets current user
+  const user = await prisma.user.findFirst({
+    where: {
+      email: session.user.email,
+    },
+  });
+
+  // If a non-admin tries to access register page, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
+  if (user.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+    // If admin, show page
+  } else {
+    return {
+      props: { session },
+    };
+  }
 }
