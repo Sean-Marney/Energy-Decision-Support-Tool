@@ -26,7 +26,7 @@ export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
-  // TODO - Only have one instance of this code to reduce repeated code
+  // TODO - Only have one instance of 'get user' code to reduce repeated code
   try {
     const user = await prisma.user.findFirst({
       where: {

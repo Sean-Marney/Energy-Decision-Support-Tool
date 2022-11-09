@@ -1,11 +1,8 @@
 import Head from "next/head";
-import Layout from "../layout/layout";
 import styles from "../styles/Form.module.css";
-// npm install react-icons --save
 import { HiAtSymbol, HiEye } from "react-icons/hi";
 import { useState } from "react";
-import { signIn, signOut } from "next-auth/react";
-// npm install formik --save
+import { signIn } from "next-auth/react";
 import { useFormik } from "formik";
 import loginValidate from "../lib/validate";
 import { useRouter } from "next/router";
@@ -44,9 +41,9 @@ export default function Login() {
   }
 
   return (
-    <Layout>
-      {/* Invalid credentials toast message */}
+    <div>
       <div>
+        {/* Invalid credentials toast message */}
         <ToastContainer />
       </div>
 
@@ -81,11 +78,6 @@ export default function Login() {
               <HiAtSymbol size={25} />
             </span>
           </div>
-          {/* {formik.errors.email && formik.touched.email ? (
-            <span className="text-rose-500">{formik.errors.email}</span>
-          ) : (
-            <></>
-          )} */}
 
           <div
             className={`${styles.input_group} ${
@@ -108,11 +100,6 @@ export default function Login() {
               <HiEye size={25} />
             </span>
           </div>
-          {/* {formik.errors.password && formik.touched.password ? (
-            <span className="text-rose-500">{formik.errors.password}</span>
-          ) : (
-            <></>
-          )} */}
 
           <div className="input-button">
             <button className={styles.button} type="submit">
@@ -121,11 +108,11 @@ export default function Login() {
           </div>
         </form>
       </section>
-    </Layout>
+    </div>
   );
 }
 
-// On  loading /login, create default admin and manager user
+// On  loading /login, create default admin and manager user (unless already exists)
 export async function getStaticProps() {
   console.log("Creating default users");
 

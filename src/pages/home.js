@@ -1,5 +1,4 @@
 // Page for users not logged in
-
 import Link from "next/link";
 
 export default function Home() {
