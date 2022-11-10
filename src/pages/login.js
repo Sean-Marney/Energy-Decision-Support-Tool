@@ -117,17 +117,19 @@ export async function getStaticProps() {
   console.log("Creating default users");
 
   try {
-    const defaultUsers = await prisma.user.create({
-      data: {
-        email: "admin@e2s.com",
-        password: await hash("admin123", 12),
-        role: "admin",
-      },
-      data: {
-        email: "manager@cardiff.com",
-        password: await hash("manager123", 12),
-        role: "manager",
-      },
+    const defaultUsers = await prisma.user.createMany({
+      data: [
+        {
+          email: "admin@e2s.com",
+          password: await hash("admin123", 12),
+          role: "admin",
+        },
+        {
+          email: "manager@cardiff.com",
+          password: await hash("manager123", 12),
+          role: "manager",
+        },
+      ],
     });
     return {
       props: {
