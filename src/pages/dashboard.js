@@ -1,5 +1,6 @@
 import { signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
+import Head from "next/head";
 
 export default function Dashboard() {
   function handleSignOut() {
@@ -8,6 +9,9 @@ export default function Dashboard() {
 
   return (
     <div>
+      <Head>
+        <title>Dashboard</title>
+      </Head>
       <h1>Dashboard</h1>
       <div className="flex justify-center">
         <button

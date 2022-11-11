@@ -1,16 +1,15 @@
 import Head from "next/head";
-import Layout from "../layout/layout";
-import styles from "../styles/Form.module.css";
+import styles from "../../../styles/Form.module.css";
 // npm install react-icons --save
 import { HiAtSymbol, HiEye } from "react-icons/hi";
-import { useState, Fragment } from "react";
+import { useState } from "react";
 // npm install formik --save
-import { useFormik, useField } from "formik";
-import { registerValidate } from "../lib/validate";
+import { useFormik } from "formik";
+import { registerValidate } from "../../../lib/validate";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
-export default function Register() {
+export default function RegisterUser() {
   const [show, setShow] = useState({ password: false, cpassword: false });
   const router = useRouter();
   const formik = useFormik({
@@ -39,7 +38,7 @@ export default function Register() {
   }
 
   return (
-    <Layout>
+    <div>
       <Head>
         <title>Admin Panel</title>
       </Head>
@@ -137,7 +136,7 @@ export default function Register() {
           </div>
         </form>
       </section>
-    </Layout>
+    </div>
   );
 }
 
