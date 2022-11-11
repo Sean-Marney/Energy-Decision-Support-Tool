@@ -3,9 +3,9 @@ import Layout from "../layout/layout";
 import styles from "../styles/Form.module.css";
 // npm install react-icons --save
 import { HiAtSymbol, HiEye } from "react-icons/hi";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 // npm install formik --save
-import { useFormik } from "formik";
+import { useFormik, useField } from "formik";
 import { registerValidate } from "../lib/validate";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
@@ -117,15 +117,17 @@ export default function Register() {
             </span>
           </div>
 
-          {/* TODO: change role input to a dropdown */}
-          <div className={`${styles.input_group}`}>
-            <input
+          <div className={styles.input_group}>
+            <select
               className={styles.input_text}
-              type="text"
-              name="role"
-              placeholder="Role"
+              name="dropdown"
               {...formik.getFieldProps("role")}
-            />
+            >
+              <option value="">Select a Role</option>
+              <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
+              <option value="read-only">Read-Only</option>
+            </select>
           </div>
 
           <div className="input-button">

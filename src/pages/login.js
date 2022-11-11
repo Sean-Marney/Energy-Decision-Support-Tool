@@ -113,6 +113,7 @@ export default function Login() {
 }
 
 // On  loading /login, create default admin and manager user (unless already exists)
+// TODO: Error occurs if the database has no default users and user navigates to index before /login
 export async function getStaticProps() {
   console.log("Creating default users");
 

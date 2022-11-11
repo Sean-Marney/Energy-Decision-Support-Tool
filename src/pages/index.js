@@ -47,6 +47,15 @@ export async function getServerSideProps({ req }) {
     };
   }
 
+  if (session && user.role === "read-only") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+
   // If not logged in, load login page
   if (!session) {
     return {

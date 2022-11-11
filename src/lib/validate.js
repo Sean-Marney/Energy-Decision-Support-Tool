@@ -45,5 +45,9 @@ export function registerValidate(values) {
     errors.cpassword = "Invalid confirm password";
   }
 
+  if (!values.role) {
+    errors.role = "Required";
+  }
+
   return errors;
 }
