@@ -20,10 +20,13 @@ export default function ManageOrganisations() {
       <div>
         <br />
         <h1>Manage an organisaton:</h1>
+        {/* Get orgs from DB and display */}
         <Link href={"/admin/organisations/org1"}>Organisation 1</Link> <br />
         <Link href={"/admin/organisations/org2"}>Organisation 2</Link> <br />
         <Link href={"/admin/organisations/org3"}>Organisation 3</Link> <br />
       </div>
+
+      {/* register org will go inside a link to each org */}
 
       {/* <div className="flex justify-center">
         <Link
