@@ -23,6 +23,6 @@ model User {
 }
 
 model Organisation {
-  id      Int    @id @default(autoincrement())
-  orgName String @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }

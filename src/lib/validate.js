@@ -19,7 +19,7 @@ export default function loginValidate(values) {
   return errors;
 }
 
-export function registerUserValidate(values) {
+export function registerValidate(values) {
   const errors = {};
 
   if (!values.email) {
@@ -47,16 +47,6 @@ export function registerUserValidate(values) {
 
   if (!values.role) {
     errors.role = "Required";
-  }
-
-  return errors;
-}
-
-export function registerOrgValidate(values) {
-  const errors = {};
-
-  if (!values.orgName) {
-    errors.orgName = "Required";
   }
 
   return errors;
