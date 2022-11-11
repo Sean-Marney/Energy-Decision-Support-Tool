@@ -1,16 +1,16 @@
 import Head from "next/head";
-import Layout from "../layout/layout";
-import styles from "../styles/Form.module.css";
+import Layout from "../../../layout/layout";
+import styles from "../../../styles/Form.module.css";
 // npm install react-icons --save
 import { HiAtSymbol, HiEye } from "react-icons/hi";
-import { useState, Fragment } from "react";
+import { useState } from "react";
 // npm install formik --save
-import { useFormik, useField } from "formik";
-import { registerValidate } from "../lib/validate";
+import { useFormik } from "formik";
+import { registerUserValidate } from "../../../lib/validate";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
-export default function Register() {
+export default function RegisterUser() {
   const [show, setShow] = useState({ password: false, cpassword: false });
   const router = useRouter();
   const formik = useFormik({
@@ -20,7 +20,7 @@ export default function Register() {
       cpassword: "",
       role: "",
     },
-    validate: registerValidate,
+    validate: registerUserValidate,
     onSubmit,
   });
 
@@ -31,10 +31,11 @@ export default function Register() {
       body: JSON.stringify(values),
     };
 
-    await fetch("http://localhost:3000/api/auth/signup", submit).then((res) =>
-      res.json().then((data) => {
-        if (data) router.push("http://localhost:3000");
-      })
+    await fetch("http://localhost:3000/api/auth/signup-user", submit).then(
+      (res) =>
+        res.json().then((data) => {
+          if (data) router.push("http://localhost:3000");
+        })
     );
   }
 
@@ -117,7 +118,11 @@ export default function Register() {
             </span>
           </div>
 
-          <div className={styles.input_group}>
+          <div
+            className={`${styles.input_group} ${
+              formik.errors.role && formik.touched.role ? "border-rose-600" : ""
+            }`}
+          >
             <select
               className={styles.input_text}
               name="dropdown"
