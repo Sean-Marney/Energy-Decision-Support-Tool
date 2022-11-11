@@ -1,34 +1,43 @@
+import { signOut } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 
-export default function ManageOrganisations() {
+export default function ManageOrganisations({ getOrganisations }) {
+  function handleSignOut() {
+    signOut();
+  }
+
   return (
     <div>
       <Head>
         <title>Admin Panel</title>
       </Head>
 
-      <div className="flex justify-center">
-        <Link
-          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
-          href={"/admin/organisations/register-organisation"}
-        >
-          Register an Organisation
-        </Link>
-      </div>
+      <div className="container mx-auto text-center py-20">
+        <h3 className="text-4xl font-bold">Admin Panel</h3>
 
-      <div>
-        <br />
-        <h1>Manage an organisaton:</h1>
-        {/* Get orgs from DB and display */}
-        <Link href={"/admin/organisations/org1"}>Organisation 1</Link> <br />
-        <Link href={"/admin/organisations/org2"}>Organisation 2</Link> <br />
-        <Link href={"/admin/organisations/org3"}>Organisation 3</Link> <br />
-      </div>
+        <div className="flex justify-center">
+          <button
+            className="mt-5 px-10 py-1 rounded-sm bg-gray-300"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
+        </div>
 
-      {/* register org will go inside a link to each org */}
+        <div className="flex justify-center">
+          <Link
+            className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
+            href={"/admin/organisations/register-organisation"}
+          >
+            Register an Organisation
+          </Link>
+        </div>
 
-      {/* <div className="flex justify-center">
+        {/* register org will go inside a link to each org */}
+
+        {/* <div className="flex justify-center">
         <Link
           className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
           href={"/admin/organisations/register-user"}
@@ -36,6 +45,71 @@ export default function ManageOrganisations() {
           Register New Account
         </Link>
       </div> */}
+      </div>
+
+      {/* Show all organisations as dynamic links to their own page */}
+      <div>
+        <b>Manage an organisaton:</b>
+        <ul>
+          {getOrganisations.map((organisation) => (
+            <li key={organisation.id}>
+              <Link href={`/admin/organisations/${organisation.orgName}`}>
+                {organisation.orgName}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
+}
+
+// Protects route
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  // Gets all organisations (returned as props)
+  const getOrganisations = await prisma.organisation.findMany();
+
+  // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
+  // TODO - Only have one instance of 'get user' code to reduce repeated code
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: session.user.email,
+      },
+    });
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
+    };
+  }
+
+  // Gets currently logged in user
+  const user = await prisma.user.findFirst({
+    where: {
+      email: session.user.email,
+    },
+  });
+
+  // If a non-admin tries to access admin panel, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
+  if (user.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+    // If admin, show page
+  } else {
+    return {
+      props: {
+        session,
+        getOrganisations,
+      },
+    };
+  }
 }
