@@ -15,7 +15,7 @@ export default NextAuth({
         });
 
         if (!result) {
-          throw new Error("User not found with provided email");
+          throw new Error("Email or password doesn't match");
         }
 
         const checkPassword = await compare(
