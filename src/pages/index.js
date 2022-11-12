@@ -27,16 +27,6 @@ export async function getServerSideProps({ req }) {
     },
   });
 
-  // If manager, load dashboard
-  if (session && user.role === "manager") {
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permanent: false,
-      },
-    };
-  }
-
   // If admin, load admin panel
   if (session && user.role === "admin") {
     return {
@@ -47,6 +37,17 @@ export async function getServerSideProps({ req }) {
     };
   }
 
+  // If manager, load dashboard
+  if (session && user.role === "manager") {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+
+  // If read-only, load dashboard - Needs to be made read-only somehow
   if (session && user.role === "read-only") {
     return {
       redirect: {

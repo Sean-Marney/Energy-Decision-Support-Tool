@@ -1,24 +1,26 @@
 import Head from "next/head";
-import Layout from "../../../layout/layout";
-import styles from "../../../styles/Form.module.css";
+import Layout from "../../../../layout/layout";
+import styles from "../../../../styles/Form.module.css";
 // npm install react-icons --save
 import { HiAtSymbol, HiEye } from "react-icons/hi";
 import { useState } from "react";
 // npm install formik --save
 import { useFormik } from "formik";
-import { registerUserValidate } from "../../../lib/validate";
+import { registerUserValidate } from "../../../../lib/validate";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
-export default function RegisterUser() {
-  const [show, setShow] = useState({ password: false, cpassword: false });
+export default function RegisterUserInOrganisation() {
   const router = useRouter();
+  const { orgName } = router.query;
+  const [show, setShow] = useState({ password: false, cpassword: false });
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
       cpassword: "",
       role: "",
+      organisation: orgName,
     },
     validate: registerUserValidate,
     onSubmit,
@@ -49,9 +51,7 @@ export default function RegisterUser() {
           <h1 className="text-grey-800 text-4xl font-bold py-4">
             Register a New User
           </h1>
-          <p className="w-3/4 mx-auto text-gray-400">
-            Empowering Energy Solutions
-          </p>
+          <p className="w-3/4 mx-auto text-gray-400">{orgName}</p>
         </div>
 
         <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>

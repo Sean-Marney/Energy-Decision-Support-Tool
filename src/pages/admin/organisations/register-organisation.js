@@ -31,7 +31,7 @@ export default function RegisterOrganisation() {
       submit
     ).then((res) =>
       res.json().then((data) => {
-        if (data) router.push("http://localhost:3000");
+        if (data) router.push("http://localhost:3000/admin/organisations");
       })
     );
   }
