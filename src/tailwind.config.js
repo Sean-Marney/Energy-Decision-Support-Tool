@@ -7,11 +7,7 @@ module.exports = {
     "./layout/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        'cardiff-blue': '#2B344D'
-      }
-    },
+    extend: {},
   },
   plugins: [],
 };

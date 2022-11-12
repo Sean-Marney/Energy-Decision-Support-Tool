@@ -41,8 +41,7 @@ export default function Login() {
   }
 
   return (
-    <>
-<div>
+    <div>
       <div>
         {/* Invalid credentials toast message */}
         <ToastContainer />
@@ -110,8 +109,6 @@ export default function Login() {
         </form>
       </section>
     </div>
-
-    </>
   );
 }
 

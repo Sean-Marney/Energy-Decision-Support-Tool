@@ -1,22 +1,14 @@
 import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
-import HeaderBar from "../components/HeaderBar";
-import SideBar from "../components/SideBar";
+import Layout from "../layout/layout";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <HeaderBar>
-      <div className="grid grid-cols-6 h-screen">
-        <div className="col-span-1">
-          <SideBar />
-        </div>
-        <div class="col-span-5">
-          <SessionProvider session={pageProps.session}>
-            <Component {...pageProps} />
-          </SessionProvider>
-        </div>
-      </div>
-    </HeaderBar>
+    <Layout>
+      <SessionProvider session={pageProps.session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </Layout>
   );
 }
 
