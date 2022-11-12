@@ -36,13 +36,13 @@ export default function RegisterUserInOrganisation() {
     await fetch("http://localhost:3000/api/auth/signup-user", submit).then(
       (res) =>
         res.json().then((data) => {
-          if (data) router.push("http://localhost:3000");
+          if (data) router.push("http://localhost:3000/admin/organisations");
         })
     );
   }
 
   return (
-    <Layout>
+    <div>
       <Head>
         <title>Admin Panel</title>
       </Head>
@@ -142,7 +142,7 @@ export default function RegisterUserInOrganisation() {
           </div>
         </form>
       </section>
-    </Layout>
+    </div>
   );
 }
 

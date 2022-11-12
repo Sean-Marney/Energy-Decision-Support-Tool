@@ -37,7 +37,7 @@ export default function RegisterOrganisation() {
   }
 
   return (
-    <Layout>
+    <div>
       <Head>
         <title>Admin Panel</title>
       </Head>
@@ -78,7 +78,7 @@ export default function RegisterOrganisation() {
           </div>
         </form>
       </section>
-    </Layout>
+    </div>
   );
 }
 

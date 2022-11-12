@@ -2,6 +2,7 @@ import { signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import styles from "../../../styles/Form.module.css";
 
 export default function ManageOrganisations({ getOrganisations }) {
   function handleSignOut() {
@@ -53,7 +54,10 @@ export default function ManageOrganisations({ getOrganisations }) {
         <ul>
           {getOrganisations.map((organisation) => (
             <li key={organisation.id}>
-              <Link href={`/admin/organisations/${organisation.orgName}`}>
+              <Link
+                className={styles.organisation}
+                href={`/admin/organisations/${organisation.orgName}`}
+              >
                 {organisation.orgName}
               </Link>
             </li>

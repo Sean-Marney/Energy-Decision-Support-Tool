@@ -15,10 +15,12 @@ datasource db {
 // npx prisma migrate dev --name init    <-- Syncs schema with database
 // npm run devStart
 
+// TODO: Needs to be restructured to a one to many relationship rather than having organisation as a string
+
 model Organisation {
   id      Int    @id @default(autoincrement())
   orgName String @unique
-  // users   User[]
+  // users   User[] // not stored
 }
 
 model User {
@@ -27,6 +29,6 @@ model User {
   password     String
   role         String
   organisation String
-  // organisation   Organisation @relation(fields: [organisationId], references: [id])
+  // organisation   Organisation @relation(fields: [organisationId], references: [id]) // not stored
   // organisationId Int
 }
