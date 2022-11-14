@@ -26,3 +26,12 @@ model Organisation {
   id   Int    @id @default(autoincrement())
   name String @unique
 }
+
+model Optimisations {
+  id     Int     @id @default(autoincrement())
+  organisation     Int
+  priority     String 
+  title     String 
+  body     String    
+  achived  Boolean     
+}

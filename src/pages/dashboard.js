@@ -60,16 +60,13 @@ class TargetComparison extends React.Component {
     }
 }
 
-export default function Dashboard({data},{numberOfOptimisations}) {
+export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
   }
 
   return (
     <div>
-      {/* <Head>
-        <title>Dashboard</title>
-      </Head> */}
       <main>
         <div className="flex flex-row">
           <div className="basis-2/5 border-2 m-4 shadow">
@@ -85,7 +82,7 @@ export default function Dashboard({data},{numberOfOptimisations}) {
                 <div className="basis-1/3 h-full">
                   <br/>
                   <br/>
-                  <h3 className="text-5xl font-bold align-middle">{numberOfOptimisations}</h3>
+                  <h3 className="text-5xl font-bold">{data[2]}</h3>
                 </div>                
                 <div className="basis-2/3">
                   <Image
@@ -149,9 +146,17 @@ export async function getServerSideProps({ req }) {
       },
     };
   }
-  const data = calculateEnergyData("NHS")
+  let number = 0;
+  try {
+    const optimisations = await prisma.optimisations.findMany({});
+    number = optimisations.length;
+  } catch (error) {
+      console.log(error);
+  };
+  const data = calculateEnergyData("NHS");
+  data[2] = number;
   // If admin or manager, show page
   return {
-    props: { session , data}
+    props: {session , data}
   };
 }
