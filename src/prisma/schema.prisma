@@ -35,3 +35,10 @@ model Optimisations {
   body     String    
   achived  Boolean     
 }
+model Targets {
+  id     Int     @id @default(autoincrement())
+  organisation     Int
+  name     String 
+  value     String 
+  timeframe     String        
+}

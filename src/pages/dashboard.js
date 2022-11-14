@@ -12,52 +12,55 @@ class KPIContainer extends React.Component {
   return (
     <div>
       <h3 className="text-xl divide-y">{this.props.title}</h3>
-            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.data.comparsionToEnergyTarget}/>
-            <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.data.comparsionToCostTarget}/>
-            <KPIData data = {this.props.data.carbonEmissions} targetcomparison = {this.props.data.comparsionToCarbonTarget}/>
+            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " kwh"/>
+            <br/>
+            <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target[1]} units = "£"/>
+            <br/>
+            <KPIData data = {this.props.data.carbonEmissions} targetcomparison = {this.props.target[0]} units = " tCO2e"/>
     </div>
     );
   }
 }
 class KPIData extends React.Component {
   render() {
-  return (
-    <div>
-      <h1 className='text-3xl font-bold'>{this.props.data}</h1>
-        <TargetComparison value = {this.props.targetcomparison}/>
-    </div>
-    );
-  }
-}
-
-
-class TargetComparison extends React.Component {
-  render() {
     let imageSource, text;
-    if (this.props.value >0){
+    let comparsion = parseInt(this.props.targetcomparison) - parseInt(this.props.data);
+    let positiveValue = Math.abs( comparsion );
+    let value, kpiData;
+    if (this.props.units == "£"){
+      value = "£" + positiveValue;
+      kpiData = "£" + this.props.data;
+    }else{
+      value = positiveValue + this.props.units;
+      kpiData = this.props.data + this.props.units;
+    }
+    if (comparsion <0){
       imageSource =  arrowup;
-      text = "Above";
+      text = value + " Above";
     }  
-    else if (this.props.value <0){
+    else if (comparsion >0){
       imageSource =  arrowdown;
-      text = "Below";
+      text = value + " Below";
     }  
     else{
       imageSource =  reached;
       text = "Reached";
     }  
-      return ( 
-      <div className="flex flex-row">   
+  return (
+    <div>
+      <h1 className='text-4xl font-bold text-left'>{kpiData}</h1>
+      <div className="flex flex-row text-left">   
         <Image
           src={imageSource}
           height={25}
           width={25}
           alt= {text}
         />
-        <p>{text} your target</p>
-      </div>  
-      );
-    }
+        <p className='text-xs'>{text} your target</p>
+      </div> 
+    </div>
+    );
+  }
 }
 
 export default function Dashboard({data}) {
@@ -70,10 +73,10 @@ export default function Dashboard({data}) {
       <main>
         <div className="flex flex-row">
           <div className="basis-2/5 border-2 m-4 shadow">
-            <KPIContainer title="Site KPIs last week" data = {data[1]}/>    
+            <KPIContainer title="Site KPIs last week" data = {data[1]} target = {data[3]}/>    
           </div>
           <div className="basis-2/5 border-2 m-4 shadow">
-            <KPIContainer title="Site KPIs last month" data = {data[0]}/>    
+            <KPIContainer title="Site KPIs last month" data = {data[0]} target = {data[4]}/>    
           </div>
           <div className="basis-1/5 border-2 m-4 shadow">
             <div className = "flex flex-col">
@@ -153,8 +156,32 @@ export async function getServerSideProps({ req }) {
   } catch (error) {
       console.log(error);
   };
+  let targets;
+  try {
+    targets = await prisma.targets.findMany(  {   
+      take: 6,
+      where: {
+        organisation: 1,
+      },  
+      orderBy: [
+        {
+          name: 'asc',
+        },
+        {
+          timeframe: 'desc',
+        },
+        ],
+      });
+      console.log(targets);
+  } catch (error) {
+      console.log(error);
+  };
+  let weekly = [targets[0].value,targets[2].value,targets[4].value]
+  let monthly = [targets[1].value,targets[3].value,targets[5].value]
   const data = calculateEnergyData("NHS");
   data[2] = number;
+  data[3] = weekly;
+  data[4] = monthly;
   // If admin or manager, show page
   return {
     props: {session , data}

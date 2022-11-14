@@ -32,8 +32,8 @@ function readEnergyData(content){
       index = index + 1;
   }
   // Returns the cost, energy usage, carbon emission and target comparsion from the last month and week
-  let monthlyData = {"energyUsage":parseInt(monthlyUsage),"energyCost":parseInt(monthlyCost),"carbonEmissions":"40 tCO2e","comparsionToEnergyTarget":10,"comparsionToCostTarget":-10,"comparsionToCarbonTarget":0} 
-  let weeklyData = {"energyUsage":parseInt(weeklyUsage),"energyCost":parseInt(weeklyCost),"carbonEmissions":"10 tCO2e","comparsionToEnergyTarget":10,"comparsionToCostTarget":-10,"comparsionToCarbonTarget":0} 
+  let monthlyData = {"energyUsage":parseInt(monthlyUsage),"energyCost":parseInt(monthlyCost),"carbonEmissions":"40"} 
+  let weeklyData = {"energyUsage":parseInt(weeklyUsage),"energyCost":parseInt(weeklyCost),"carbonEmissions":"10"} 
   return [monthlyData,weeklyData];
 }
 
