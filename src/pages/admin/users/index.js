@@ -1,30 +1,25 @@
-import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import Link from "next/link";
+import styles from "../../../styles/Form.module.css";
 
-// Should be switched to ID later
-export default function User() {
-  function handleSignOut() {
-    signOut();
-  }
-
-  const router = useRouter();
-  const { email } = router.query;
-
+export default function Users({ getUsers }) {
   return (
-    <div>
-      <h1>
-        User profile for <b>{email}</b>
-      </h1>
-
-      <div className="flex justify-center">
-        <button
-          className="mt-5 px-10 py-1 rounded-sm bg-gray-300"
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </button>
-      </div>
+    <div className="text-xl">
+      <br />
+      <b>Manage Users:</b>
+      <ul>
+        {getUsers.map((user) => (
+          <li key={user.id}>
+            <Link
+              className={styles.organisation}
+              // Should switch to IDs in links once done
+              href={`/admin/users/${user.email}`}
+            >
+              {user.email} <b className="text-2xl">|</b> {user.organisation}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -32,6 +27,8 @@ export default function User() {
 // Protects route
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
+
+  const getUsers = await prisma.user.findMany({});
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
@@ -70,6 +67,7 @@ export async function getServerSideProps({ req }) {
     return {
       props: {
         session,
+        getUsers,
       },
     };
   }

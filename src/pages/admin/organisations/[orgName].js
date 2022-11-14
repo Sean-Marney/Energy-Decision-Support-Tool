@@ -2,14 +2,20 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import styles from "../../../styles/Form.module.css";
 
 // TODO: Admin can type anything after /admin/organisations/ but should only be able to view existing organisations in database
 
 export default function Organisation({ getUsers }) {
+  function handleSignOut() {
+    signOut();
+  }
+
   const router = useRouter();
   const { orgName } = router.query;
 
+  // TODO: Needs to only show users that match orgName
   return (
     <div>
       <Head>
@@ -17,6 +23,15 @@ export default function Organisation({ getUsers }) {
       </Head>
       <div>
         <h1>{orgName}</h1>
+      </div>
+
+      <div className="flex justify-center">
+        <button
+          className="mt-5 px-10 py-1 rounded-sm bg-gray-300"
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </button>
       </div>
 
       <div className="flex justify-center">
@@ -31,7 +46,7 @@ export default function Organisation({ getUsers }) {
       <div className="text-xl">
         <br />
         <b>Manage Users:</b>
-        {/* <ul>
+        <ul>
           {getUsers.map((user) => (
             <li key={user.id}>
               <Link
@@ -43,7 +58,7 @@ export default function Organisation({ getUsers }) {
               </Link>
             </li>
           ))}
-        </ul> */}
+        </ul>
       </div>
     </div>
   );
@@ -53,11 +68,7 @@ export default function Organisation({ getUsers }) {
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
-  // const getUsers = await prisma.user.findMany({
-  //   where: {
-  //     organisation: "E2S",
-  //   },
-  // });
+  const getUsers = await prisma.user.findMany({});
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
@@ -96,7 +107,7 @@ export async function getServerSideProps({ req }) {
     return {
       props: {
         session,
-        // getUsers,
+        getUsers,
       },
     };
   }

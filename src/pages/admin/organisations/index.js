@@ -35,17 +35,6 @@ export default function ManageOrganisations({ getOrganisations }) {
             Register an Organisation
           </Link>
         </div>
-
-        {/* register org will go inside a link to each org */}
-
-        {/* <div className="flex justify-center">
-        <Link
-          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
-          href={"/admin/organisations/register-user"}
-        >
-          Register New Account
-        </Link>
-      </div> */}
       </div>
 
       {/* Show all organisations as dynamic links to their own page */}
