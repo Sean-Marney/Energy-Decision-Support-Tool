@@ -11,7 +11,9 @@ class KPIContainer extends React.Component {
   render() {
   return (
     <div>
-      <h3 className="text-xl divide-y">{this.props.title}</h3>
+      <h3 className="text-xl divide-y text-left">{this.props.title}</h3>
+            <RedLine />
+            <br/>
             <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " kwh"/>
             <br/>
             <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target[1]} units = "£"/>
@@ -21,6 +23,22 @@ class KPIContainer extends React.Component {
     );
   }
 }
+
+class RedLine extends React.Component{
+  render (){
+  return (
+    <hr
+      style={{
+          color: "#D4374A",
+          backgroundColor: "#D4374A",
+          height: 5,
+          width: 20
+      }}
+    />
+  );
+  }
+}
+
 class KPIData extends React.Component {
   render() {
     let imageSource, text;
@@ -36,11 +54,11 @@ class KPIData extends React.Component {
     }
     if (comparsion <0){
       imageSource =  arrowup;
-      text = value + " Above";
+      text = value + " above";
     }  
     else if (comparsion >0){
       imageSource =  arrowdown;
-      text = value + " Below";
+      text = value + " below";
     }  
     else{
       imageSource =  reached;
@@ -48,7 +66,7 @@ class KPIData extends React.Component {
     }  
   return (
     <div>
-      <h1 className='text-4xl font-bold text-left'>{kpiData}</h1>
+      <h1 className='font-black text-4xl text-left'>{kpiData}</h1>
       <div className="flex flex-row text-left">   
         <Image
           src={imageSource}
@@ -80,7 +98,8 @@ export default function Dashboard({data}) {
           </div>
           <div className="basis-1/5 border-2 m-4 shadow">
             <div className = "flex flex-col">
-                <h3 className="text-3xl">Pending optimisations</h3>
+                <h3 className="text-xl text-left">Pending optimisations</h3>
+                <RedLine />
               <div className="flex flex-row">
                 <div className="basis-1/3 h-full">
                   <br/>
@@ -135,12 +154,14 @@ export async function getServerSideProps({ req }) {
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
+  let organisationID;
   try {
     const user = await prisma.user.findFirst({
       where: {
         email: session.user.email,
       },
     });
+    organisationID = user.organisation;
   } catch (error) {
     return {
       redirect: {
@@ -149,19 +170,26 @@ export async function getServerSideProps({ req }) {
       },
     };
   }
+// Reads number of optimisations in the database
   let number = 0;
   try {
-    const optimisations = await prisma.optimisations.findMany({});
+    const optimisations = await prisma.optimisations.findMany({
+      where: {
+        organisation: organisationID,
+        achived : false
+      }
+    });
     number = optimisations.length;
   } catch (error) {
       console.log(error);
   };
-  let targets;
+  // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
+  let targets, weekly = [0,0,0], monthly = [0,0,0];
   try {
     targets = await prisma.targets.findMany(  {   
       take: 6,
       where: {
-        organisation: 1,
+        organisation: organisationID,
       },  
       orderBy: [
         {
@@ -172,13 +200,15 @@ export async function getServerSideProps({ req }) {
         },
         ],
       });
-      console.log(targets);
+  // Splits the target data up into weekly and monthly targets
+  weekly = [targets[0].value,targets[2].value,targets[4].value]
+  monthly = [targets[1].value,targets[3].value,targets[5].value]
   } catch (error) {
       console.log(error);
   };
-  let weekly = [targets[0].value,targets[2].value,targets[4].value]
-  let monthly = [targets[1].value,targets[3].value,targets[5].value]
-  const data = calculateEnergyData("NHS");
+  // Reads the energy data from the CSV File
+  const data = calculateEnergyData(organisationID);
+  // Sends all the data to the page
   data[2] = number;
   data[3] = weekly;
   data[4] = monthly;
