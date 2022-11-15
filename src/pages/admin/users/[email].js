@@ -3,13 +3,21 @@ import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
 // Should be switched to ID later
-export default function User() {
+export default function User({ getUsers }) {
   function handleSignOut() {
     signOut();
   }
 
   const router = useRouter();
   const { email } = router.query;
+
+  // Getting current user's details to display
+  const arrayOfUsers = [];
+  getUsers.map((user) => {
+    if (user.email === email) {
+      arrayOfUsers.push(user);
+    }
+  });
 
   return (
     <div>
@@ -25,6 +33,14 @@ export default function User() {
           Sign Out
         </button>
       </div>
+
+      <div className="text-2xl">
+        <br />
+        <b>ID:</b> {arrayOfUsers[0].id} <br />
+        <b>Email:</b> {arrayOfUsers[0].email} <br />
+        <b>Role:</b> {arrayOfUsers[0].role} <br />
+        <b>Organisation:</b> {arrayOfUsers[0].organisation} <br />
+      </div>
     </div>
   );
 }
@@ -32,6 +48,9 @@ export default function User() {
 // Protects route
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
+
+  // Get all users from database
+  const getUsers = await prisma.user.findMany();
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
@@ -70,6 +89,7 @@ export async function getServerSideProps({ req }) {
     return {
       props: {
         session,
+        getUsers,
       },
     };
   }

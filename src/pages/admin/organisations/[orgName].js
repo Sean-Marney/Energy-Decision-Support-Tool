@@ -12,10 +12,11 @@ export default function Organisation({ getUsers }) {
     signOut();
   }
 
+  // Gets name of organisation selected
   const router = useRouter();
   const { orgName } = router.query;
 
-  // Creates array of users only in organisation that was navigated to
+  // Creates array of users and filters by organisation
   const arrayOfOrgs = [];
   getUsers.map((user) => {
     if (user.organisation === orgName) {
@@ -54,6 +55,7 @@ export default function Organisation({ getUsers }) {
       <div className="text-xl">
         <br />
         <b>Manage Users:</b>
+        {/* Shows only users from selected organisation */}
         <ul>
           {arrayOfOrgs.map((user) => (
             <li key={user.id}>
@@ -75,9 +77,8 @@ export default function Organisation({ getUsers }) {
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
+  // Get all users from database (to be filtered by organisation)
   const getUsers = await prisma.user.findMany({});
-  // const getUsers =
-  //   await prisma.$queryRaw`SELECT * FROM user WHERE organisation =${orgName}`;
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
