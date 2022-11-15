@@ -14,7 +14,7 @@ class KPIContainer extends React.Component {
       <h3 className="text-xl divide-y text-left">{this.props.title}</h3>
             <RedLine />
             <br/>
-            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " kwh"/>
+            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " mwh"/>
             <br/>
             <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target[1]} units = "£"/>
             <br/>
