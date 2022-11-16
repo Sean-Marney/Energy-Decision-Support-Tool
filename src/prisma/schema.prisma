@@ -34,7 +34,7 @@ model Optimisations {
   priority     String 
   title     String 
   body     String    
-  achived  Boolean     
+  archived  Boolean     
 }
 model Targets {
   id     Int     @id @default(autoincrement())

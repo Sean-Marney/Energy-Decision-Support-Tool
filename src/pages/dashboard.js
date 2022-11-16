@@ -16,7 +16,7 @@ class KPIContainer extends React.Component {
       <h3 className="text-xl divide-y text-left">{this.props.title}</h3>
             <RedLine />
             <br/>
-            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " MW"/>
+            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " KW"/>
             <br/>
             <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target[1]} units = "£"/>
             <br/>
@@ -149,6 +149,46 @@ export default function Dashboard({data}) {
             </div>
           </div>
         </div>
+{/* Code for insights if we wanted to add them to the page */}
+                {/* <div className='border-2 m-4 shadow'>
+        <h3 className="text-3xl">Insights</h3>
+        <div className="flex flex-row">
+        <div className="basis-1/2">
+            <div className='flex flex-row'>
+              <div className = "basis-1/4">
+                <br/>
+                <Image
+                src="/images/snow.svg"
+                height={49}
+                width={49}
+                alt="Prepare for winter"
+                />
+              </div>
+              <div className='basis-3/4'>
+                <p className='text-sm	'>In light of recent news, National Grid is urging businesses to consume less power over the winter period. Check your Optimisations today and invest early to minimise spending increase.</p>
+              </div>
+            </div>
+          </div>
+          <div className="basis-1/2">
+            <div className='flex flex-row'>
+              <div className = "basis-1/4">
+                <br/>
+                <Image
+                src="/images/pound.svg"
+                height={49}
+                width={49}
+                alt="Energy Price Guarantee"
+                />
+              </div>
+              <div className='basis-3/4'>
+                <p className='text-sm	'>A new six-month scheme for businesses and other non-domestic energy users (including charities and public sector organisations like schools) will offer equivalent support as is being provided for consumers. This will protect you from soaring energy costs and provide better insights.
+As always, unit price changes will be taken into account when calculating your Optimisations.
+For more information, visit gov.uk.</p>
+              </div>
+            </div>
+          </div>
+        </div>  
+        </div>   */}
       </main>
       <div className="flex justify-center">
         <button
@@ -208,7 +248,7 @@ export async function readOptimisations(organisationID){
       const optimisations = await prisma.optimisations.findMany({
         where: {
           organisation: organisationID,
-          achived : false
+          archived : false
         }
       });
       number = optimisations.length;
