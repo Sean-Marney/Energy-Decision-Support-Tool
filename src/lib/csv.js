@@ -18,7 +18,6 @@ function readEnergyData(content){
   let monthlyUsage = 0,monthlyCost = 0,weeklyUsage = 0,weeklyCost = 0;
   // Iterates through the last month and weeks data
   let date = content[content.length-2].split(",")[0];
-  console.log(date);
   let month = date.substring(3,5);
   let year = date.substring(6, 10);
   let numberOfDays = numberOfDaysInMonth[parseInt(month) -1];
