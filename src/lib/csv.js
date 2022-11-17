@@ -20,7 +20,7 @@ function readEnergyData(content){
   let date = content[content.length-2].split(",")[0];
   let month = date.substring(3,5);
   let numberOfDays = 0 ;
-  if (isNaN(month)== true){
+  if (isNaN(month)== true || (parseInt(month) < 0 || parseInt(month) > 12)){
     numberOfDays = 30 
   }else{
     let year = date.substring(6, 10);
