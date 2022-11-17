@@ -19,10 +19,15 @@ function readEnergyData(content){
   // Iterates through the last month and weeks data
   let date = content[content.length-2].split(",")[0];
   let month = date.substring(3,5);
-  let year = date.substring(6, 10);
-  let numberOfDays = numberOfDaysInMonth[parseInt(month) -1];
-  if (parseInt(month)==2 && parseInt(year) % 4){
-    numberOfDays = 29;
+  let numberOfDays = 0 ;
+  if (isNaN(month)== true){
+    numberOfDays = 30 
+  }else{
+    let year = date.substring(6, 10);
+    numberOfDays = numberOfDaysInMonth[parseInt(month) -1];
+    if (parseInt(month)==2 && parseInt(year) % 4){
+      numberOfDays = 29;
+    }
   }
   let index = content.length - ((numberOfDays*48)+1);
   while (index < (content.length-1)){

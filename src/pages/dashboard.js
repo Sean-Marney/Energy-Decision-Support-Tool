@@ -1,98 +1,10 @@
 import { signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
-import arrowdown from "public/images/arrowdown.svg"
-import arrowup from "public/images/arrowup.svg"
-import reached from "public/images/reached.svg"
 import Image from 'next/image'
 import React from 'react';
 import { calculateEnergyData } from '../lib/csv';
-
-
-// Container that contains KPI Data
-class KPIContainer extends React.Component {
-  render() {
-  return (
-    <div>
-      <h3 className="text-xl divide-y text-left">{this.props.title}</h3>
-            <RedLine />
-            <br/>
-            <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " KW"/>
-            <br/>
-            <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target[1]} units = "£"/>
-            <br/>
-            <KPIData data = {this.props.data.carbonEmissions} targetcomparison = {this.props.target[0]} units = " tCO2e"/>
-    </div>
-    );
-  }
-}
-
-// Red Line for Styling
-class RedLine extends React.Component{
-  render (){
-  return (
-    <hr
-      style={{
-          color: "#D4374A",
-          backgroundColor: "#D4374A",
-          height: 5,
-          width: 20
-      }}
-    />
-  );
-  }
-}
-
-// Specific KPI data and the comparison to targets
-class KPIData extends React.Component {
-  render() {
-    let imageSource, text;
-    // Compares the target and the data
-    let comparison = parseInt(this.props.targetcomparison) - parseInt(this.props.data);
-    // Converts the comparison to a positive number
-    let positiveValue = Math.abs( comparison );
-    let value, kpiData;
-    // Amends the unit on to the data
-    if (this.props.units == "£"){
-      value = "£" + positiveValue;
-      kpiData = "£" + this.props.data;
-    }else{
-      value = positiveValue + this.props.units;
-      kpiData = this.props.data + this.props.units;
-    }
-
-    // Compares whether above or below their target and set image and text accordingly
-    // Above their target
-    if (comparison <0){
-      imageSource =  arrowup;
-      text = value + " above";
-    }  
-    // Below their target
-    else if (comparison >0){
-      imageSource =  arrowdown;
-      text = value + " below";
-    } 
-    // Reached their target 
-    else{
-      imageSource =  reached;
-      text = "Reached";
-    }  
-  return (
-    <div>
-      <h1 className='font-black text-4xl text-left'>{kpiData}</h1>
-      <div className="flex flex-row text-left">   
-        <Image
-          src={imageSource}
-          height={25}
-          width={25}
-          alt= {text}
-        />
-        <p className='text-xs'>{text} your target</p>
-      </div> 
-    </div>
-    );
-  }
-}
-
+import { KPIContainer }  from '../components/KPIContainer';
+import { RedLine } from '../components/RedLine';
 export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
@@ -148,7 +60,7 @@ export default function Dashboard({data}) {
               </div>
             </div>
           </div>
-        </div>
+        </div> 
 {/* Code for insights if we wanted to add them to the page */}
                 {/* <div className='border-2 m-4 shadow'>
         <h3 className="text-3xl">Insights</h3>
@@ -198,6 +110,7 @@ For more information, visit gov.uk.</p>
           Sign Out
         </button>
       </div>
+
     </div>
   );
 }
