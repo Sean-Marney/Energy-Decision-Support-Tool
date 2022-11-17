@@ -7,7 +7,16 @@ module.exports = {
     "./layout/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        blue: {
+          950: '#2B344D',
+        },
+      },
+      fontSize : {
+        xxs: ['10px', '10px'],
+      }
+    },
   },
   plugins: [],
 };
