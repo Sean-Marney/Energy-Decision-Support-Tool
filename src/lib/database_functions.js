@@ -1,7 +1,6 @@
 // Function to read the optimisations for the organisation
 export async function updateOptimisation(optimisationID){
     // Reads number of optimisations in the database
-    let number = 0;
       try {
         const optimisations = await prisma.optimisations.update({
           where: {
@@ -48,24 +47,6 @@ export async function readTargets(organisationID){
       return data;
 }
 // Function to read the optimisations for the organisation
-export async function readOptimisations(organisationID){
-    // Reads number of optimisations in the database
-    let number = 0;
-      try {
-        const optimisations = await prisma.optimisations.findMany({
-          where: {
-            organisation: organisationID,
-            archived : false
-          }
-        });
-        number = optimisations.length;
-      } catch (error) {
-          console.log(error);
-      };
-    return number;
-  }
-
-// Function to read the optimisations for the organisation
 export async function readUnArchivedOptimisations(organisationID){
     // Reads unarchived optimisations in the database
     let optimisations;
@@ -74,7 +55,11 @@ export async function readUnArchivedOptimisations(organisationID){
           where: {
             organisation: organisationID,
             archived : false
-          }
+          },          
+          orderBy: 
+          {
+            priority: 'asc',
+          },
         });
       } catch (error) {
           console.log(error);
@@ -94,6 +79,9 @@ export async function readArchivedOptimisations(organisationID){
             id: true,
             title: true,
             priority: true
+          },orderBy: 
+          {
+            priority: 'asc',
           },
         });
       } catch (error) {

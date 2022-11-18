@@ -3,11 +3,18 @@ import { getSession } from "next-auth/react";
 import Image from 'next/image'
 import React from 'react';
 import { calculateEnergyData } from '../lib/csv';
+import { readTargets } from '../lib/database_functions';
+import { readUnArchivedOptimisations } from '../lib/database_functions';
 import { KPIContainer }  from '../components/KPIContainer';
 import { RedLine } from '../components/RedLine';
+import { router } from "next/router";
 export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
+  }
+
+  function selectOptimisations(){
+    router.push("http://localhost:3000/optimisations");
   }
 
   return (
@@ -22,7 +29,7 @@ export default function Dashboard({data}) {
             <KPIContainer title="Site KPIs last month" data = {data[0]} target = {data[4]}/>    
           </div>
 {/* Optimisations section */}
-          <div className="basis-1/5 border-2 m-4 shadow">
+          <div className="basis-1/5 border-2 m-4 shadow" onClick={selectOptimisations}>
             <div className = "flex flex-col">
                 <h3 className="text-xl text-left">Pending optimisations</h3>
                 <RedLine />
@@ -138,7 +145,8 @@ export async function getServerSideProps({ req }) {
     };
   }
   // Reads optimisations from the database
-  let number = await readOptimisations(organisationID);
+  let optimisations = await readUnArchivedOptimisations(organisationID);
+  let number = optimisations.length
   // Reads the energy data from the CSV File
   const data = calculateEnergyData(organisationID);
   // Sends all the data to the page
@@ -152,54 +160,3 @@ export async function getServerSideProps({ req }) {
     props: {session , data}
   };
 }
-
-// Function to read the optimisations for the organisation
-export async function readOptimisations(organisationID){
-  // Reads number of optimisations in the database
-  let number = 0;
-    try {
-      const optimisations = await prisma.optimisations.findMany({
-        where: {
-          organisation: organisationID,
-          archived : false
-        }
-      });
-      number = optimisations.length;
-    } catch (error) {
-        console.log(error);
-    };
-  return number;
-}
-
-
-// Function to read the weekly and monthly targets for the organisation
-export async function readTargets(organisationID){
-    let targets, weekly = [0,0,0], monthly = [0,0,0], data = [];
-    // Reads from the database
-    try {
-      targets = await prisma.targets.findMany(  {   
-        take: 6,
-        where: {
-          organisation: organisationID,
-        },  
-        orderBy: [
-          {
-            name: 'asc',
-          },
-          {
-            timeframe: 'desc',
-          },
-          ],
-        });
-    // Splits the target data up into weekly and monthly targets
-    weekly = [targets[0].value,targets[2].value,targets[4].value]
-    monthly = [targets[1].value,targets[3].value,targets[5].value]
-    data[0] = weekly;
-    data[1] = monthly;
-    } catch (error) {
-        console.log(error);
-    };
-    // Returns the data
-    return data;
-  }
-
