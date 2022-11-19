@@ -1,6 +1,6 @@
 import signup from "../pages/api/auth/signup-user";
 
-test("test", () => {
+test("Testing signup API", () => {
   const req = {
     method: "POST",
     body: {
