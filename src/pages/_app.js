@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
         <div className="col-span-1">
           <SideBar />
         </div>
-        <div class="col-span-5">
+        <div className="col-span-5">
           <SessionProvider session={pageProps.session}>
             <Component {...pageProps} />
           </SessionProvider>
