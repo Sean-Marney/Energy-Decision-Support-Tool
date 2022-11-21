@@ -1,9 +1,6 @@
 import { signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
-import tips from "public/tips.svg";
-import archive from "public/archive.svg"
 import React from 'react';
-import Image from 'next/image'
 import { ArchivedList }  from '../components/ArchivedList';
 import { OptimisationList } from "../components/OptimisationList";
 import { readUnArchivedOptimisations }  from '../lib/database_functions';
@@ -16,9 +13,11 @@ export default function Optimisations({data}) {
     <div>
       <div className="flex justify-center">
         <div className="flex flex-row"/>
+{/* Displays the optimisations */}
             <div className="basis-4/5">
                 <OptimisationList list={data[0]}/>
             </div>
+{/* Displays the archived optimisations */}            
             <div className="basis-1/5">
                 <ArchivedList list={data[1]}/>
             </div>

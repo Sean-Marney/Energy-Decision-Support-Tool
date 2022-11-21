@@ -4,14 +4,14 @@ import React from 'react';
 import Image from 'next/image';
 import { router } from "next/router";
 
-
-
 export class Optimisation extends React.Component {
     constructor(props) {
         super(props);
     
         this.handleArchive = this.handleArchive.bind(this);
       }
+
+    // Handles archive the optimisation by api call to modify value and then reloads page  
       async handleArchive() {
         let values = {"id":this.props.optimisation.id,"value":true};
         const submit = {
@@ -23,6 +23,7 @@ export class Optimisation extends React.Component {
         router.push("http://localhost:3000/optimisations");
       }
     render() {
+    // Sets the colour of the icon for the optimisation based on the priority
     let colour;
     if (this.props.optimisation.priority == "3"){
         colour = "w-8 rounded-sm ml-1 mt-1 bg-green-600";
@@ -34,6 +35,7 @@ export class Optimisation extends React.Component {
     return (
         <div className="border-2 m-2 shadow">
             <div className="flex flex-row">
+                {/* Icon with background set due to the priority  */}
                 <div className="basis-1/6">
                     <div className={colour}>
                         <Image
@@ -44,6 +46,7 @@ export class Optimisation extends React.Component {
                             />
                     </div>
                     </div>
+                    {/* Displays data with information for the optimisation */}
                     <div className="basis-5/6">
                         <h1 className="text-xl divide-y text-left font-extrabold">{this.props.optimisation.title}</h1>
                     </div> 
@@ -54,6 +57,7 @@ export class Optimisation extends React.Component {
                 <p className="text-sm">{this.props.optimisation.body}</p>
             </div>
             <div className="flex flex-row">
+                {/* Option to archive the optimisation */}
                     <div className="basis-1/2"></div>
                     <div className="basis-1/2 m-3 shadow"  onClick={this.handleArchive}>
                         <div className="flex flex-row bg-blue-950 w-40 object-right">

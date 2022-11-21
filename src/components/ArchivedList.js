@@ -1,4 +1,3 @@
-import tips from "public/tips.svg";
 import archive from "public/archive.svg"
 import React from 'react';
 import Image from 'next/image'
@@ -9,8 +8,7 @@ export class ArchivedList extends React.Component{
         this.showArchiveButton = React.createRef();
         this.showArchivedItems = this.showArchivedItems.bind(this);
       }
-
-
+    // Toggles the Archived items being shown on the page  
     showArchivedItems(){
         if (this.showArchiveButton.current.style.visibility == "hidden"){
             this.showArchiveButton.current.style.visibility = "visible";
@@ -20,9 +18,11 @@ export class ArchivedList extends React.Component{
         
     }  
     render() {
+        // Maps the list to Archived optimisation
         const listItems = this.props.list.map(optimisation => <ArchivedOptimisation optimisation = {optimisation}/>);
         return (
             <div>
+                {/* Title which allows you to select whether to view the archived items */}
                 <div className="flex flex-row bg-blue-950 w-40 object-right mt-2">
                     <div className="basis-1/5">
                         <Image
@@ -36,6 +36,7 @@ export class ArchivedList extends React.Component{
                         <h1 className="text-white text-left">Archived Items</h1>   
                     </div>
                 </div>
+                {/* Displays list of archived options here */}
                 <div id = "ArchivedList" className="border-2 shadow w-40" ref={this.showArchiveButton} style={{visibility:"hidden"}}>
                 {listItems}
                 </div> 

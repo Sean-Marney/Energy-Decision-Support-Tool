@@ -10,6 +10,7 @@ export class ArchivedOptimisation extends React.Component {
         this.showArchiveButton = React.createRef();
         this.handleUnarchive = this.handleUnarchive.bind(this);
       }
+    //   Handles unarchive the optimisation by calling api which modifies the database and then reloads the page
       async handleUnarchive() {
         let values = {"id":this.props.optimisation.id,"value":false};
         const submit = {
@@ -21,6 +22,7 @@ export class ArchivedOptimisation extends React.Component {
         router.push("http://localhost:3000/optimisations");
     }
     render() {
+        // Sets the background colour depending on the priority of the optimisation
         let colour;
         if (this.props.optimisation.priority == "3"){
             colour = "basis-1/6 bg-green-600 w-1 h-6 rounded-sm";
@@ -30,6 +32,7 @@ export class ArchivedOptimisation extends React.Component {
             colour = "basis-1/6 bg-red-600 w-1 h-6 rounded-sm";
         }  
     return (
+        // Shows the details of the archived optimisation
         <div className="border-slate-800/75 border-2 rounded-sm" ref={this.showArchiveButton} onClick={this.handleUnarchive}>
             <div className="flex flex-row m-1">
                     <div className={colour}>
