@@ -1,17 +1,29 @@
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
-import Link from "next/link";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { signOut } from "next-auth/react";
 
-export default function Admin() {
+// Should be switched to ID later
+export default function User({ getUsers }) {
   function handleSignOut() {
     signOut();
   }
 
+  const router = useRouter();
+  const { email } = router.query;
+
+  // Getting current user's details to display
+  const arrayOfUsers = [];
+  getUsers.map((user) => {
+    if (user.email === email) {
+      arrayOfUsers.push(user);
+    }
+  });
+
   return (
-    <div className="container mx-auto text-center py-20">
-      <h3 className="text-4xl font-bold">Admin Panel</h3>
+    <div>
+      <h1>
+        User profile for <b>{email}</b>
+      </h1>
 
       <div className="flex justify-center">
         <button
@@ -22,22 +34,12 @@ export default function Admin() {
         </button>
       </div>
 
-      <div className="flex justify-center">
-        <Link
-          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
-          href={"/register"}
-        >
-          Register New Account
-        </Link>
-      </div>
-
-      <div className="flex justify-center">
-        <Link
-          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
-          href={"/dashboard"}
-        >
-          Dashboard
-        </Link>
+      <div className="text-2xl">
+        <br />
+        <b>ID:</b> {arrayOfUsers[0].id} <br />
+        <b>Email:</b> {arrayOfUsers[0].email} <br />
+        <b>Role:</b> {arrayOfUsers[0].role} <br />
+        <b>Organisation:</b> {arrayOfUsers[0].organisation} <br />
       </div>
     </div>
   );
@@ -46,6 +48,9 @@ export default function Admin() {
 // Protects route
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
+
+  // Get all users from database
+  const getUsers = await prisma.user.findMany();
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
@@ -64,14 +69,14 @@ export async function getServerSideProps({ req }) {
     };
   }
 
-  // Gets currently logged in user
+  // Gets current user
   const user = await prisma.user.findFirst({
     where: {
       email: session.user.email,
     },
   });
 
-  // If a non-admin tries to access admin panel, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
+  // If a non-admin tries to access register page, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
   if (user.role !== "admin") {
     return {
       redirect: {
@@ -82,7 +87,10 @@ export async function getServerSideProps({ req }) {
     // If admin, show page
   } else {
     return {
-      props: { session },
+      props: {
+        session,
+        getUsers,
+      },
     };
   }
 }

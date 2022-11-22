@@ -1,26 +1,28 @@
 import Head from "next/head";
-import Layout from "../layout/layout";
-import styles from "../styles/Form.module.css";
+import Layout from "../../../../layout/layout";
+import styles from "../../../../styles/Form.module.css";
 // npm install react-icons --save
 import { HiAtSymbol, HiEye } from "react-icons/hi";
-import { useState, Fragment } from "react";
+import { useState } from "react";
 // npm install formik --save
-import { useFormik, useField } from "formik";
-import { registerValidate } from "../lib/validate";
+import { useFormik } from "formik";
+import { registerUserValidate } from "../../../../lib/validate";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
-export default function Register() {
-  const [show, setShow] = useState({ password: false, cpassword: false });
+export default function RegisterUserInOrganisation() {
   const router = useRouter();
+  const { orgName } = router.query;
+  const [show, setShow] = useState({ password: false, cpassword: false });
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
       cpassword: "",
       role: "",
+      organisation: orgName,
     },
-    validate: registerValidate,
+    validate: registerUserValidate,
     onSubmit,
   });
 
@@ -31,15 +33,16 @@ export default function Register() {
       body: JSON.stringify(values),
     };
 
-    await fetch("http://localhost:3000/api/auth/signup", submit).then((res) =>
-      res.json().then((data) => {
-        if (data) router.push("http://localhost:3000");
-      })
+    await fetch("http://localhost:3000/api/auth/signup-user", submit).then(
+      (res) =>
+        res.json().then((data) => {
+          if (data) router.push("http://localhost:3000/admin/organisations");
+        })
     );
   }
 
   return (
-    <Layout>
+    <div>
       <Head>
         <title>Admin Panel</title>
       </Head>
@@ -48,9 +51,7 @@ export default function Register() {
           <h1 className="text-grey-800 text-4xl font-bold py-4">
             Register a New User
           </h1>
-          <p className="w-3/4 mx-auto text-gray-400">
-            Empowering Energy Solutions
-          </p>
+          <p className="w-3/4 mx-auto text-gray-400">{orgName}</p>
         </div>
 
         <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
@@ -117,7 +118,11 @@ export default function Register() {
             </span>
           </div>
 
-          <div className={styles.input_group}>
+          <div
+            className={`${styles.input_group} ${
+              formik.errors.role && formik.touched.role ? "border-rose-600" : ""
+            }`}
+          >
             <select
               className={styles.input_text}
               name="dropdown"
@@ -137,7 +142,7 @@ export default function Register() {
           </div>
         </form>
       </section>
-    </Layout>
+    </div>
   );
 }
 
