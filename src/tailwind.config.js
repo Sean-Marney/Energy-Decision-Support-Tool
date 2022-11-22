@@ -9,7 +9,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'cardiff-blue': '#2B344D'
+        blue: {
+          950: '#2B344D',
+        },
+        'cardiff-blue': '#2B344D',
+      },
+      fontSize : {
+        xxs: ['10px', '10px'],
       }
     },
   },
