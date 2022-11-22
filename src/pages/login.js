@@ -112,10 +112,10 @@ export default function Login() {
   );
 }
 
-// On  loading /login, create default admin and manager user (unless already exists)
+// On  loading /login, create default accounts
 // TODO: Error occurs if the database has no default users and user navigates to index before /login
 export async function getStaticProps() {
-  console.log("Creating default users");
+  console.log("Creating default accounts");
 
   try {
     const defaultUsers = await prisma.user.createMany({
@@ -124,11 +124,13 @@ export async function getStaticProps() {
           email: "admin@e2s.com",
           password: await hash("admin123", 12),
           role: "admin",
+          organisation: "E2S",
         },
         {
           email: "manager@cardiff.com",
           password: await hash("manager123", 12),
           role: "manager",
+          organisation: "Cardiff University",
         },
       ],
     });
@@ -140,7 +142,7 @@ export async function getStaticProps() {
   } catch (error) {
     return {
       props: {
-        message: "Default users already created",
+        message: "Default accounts already created",
       },
     };
   }
