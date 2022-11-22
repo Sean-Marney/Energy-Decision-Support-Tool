@@ -3,11 +3,18 @@ import { getSession } from "next-auth/react";
 import Image from 'next/image'
 import React from 'react';
 import { calculateEnergyData } from '../lib/csv';
+import { readTargets } from '../lib/database_functions';
+import { readUnArchivedOptimisations } from '../lib/database_functions';
 import { KPIContainer }  from '../components/KPIContainer';
 import { RedLine } from '../components/RedLine';
+import { router } from "next/router";
 export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
+  }
+
+  function selectOptimisations(){
+    router.push("http://localhost:3000/optimisations");
   }
 
   return (
@@ -22,7 +29,7 @@ export default function Dashboard({data}) {
             <KPIContainer title="Site KPIs last month" data = {data[0]} target = {data[4]}/>    
           </div>
 {/* Optimisations section */}
-          <div className="basis-1/5 border-2 m-4 shadow">
+          <div className="basis-1/5 border-2 m-4 shadow" onClick={selectOptimisations}>
             <div className = "flex flex-col">
                 <h3 className="text-xl text-left">Pending optimisations</h3>
                 <RedLine />
@@ -138,7 +145,8 @@ export async function getServerSideProps({ req }) {
     };
   }
   // Reads optimisations from the database
-  let number = await readOptimisations(organisationID);
+  let optimisations = await readUnArchivedOptimisations(organisationID);
+  let number = optimisations.length
   // Reads the energy data from the CSV File
   const data = calculateEnergyData(organisationID);
   // Sends all the data to the page
@@ -151,6 +159,7 @@ export async function getServerSideProps({ req }) {
   return {
     props: {session , data}
   };
+<<<<<<< HEAD
 }
 
 // Function to read the optimisations for the organisation
@@ -204,3 +213,6 @@ export async function readTargets(organisationID){
     return data;
   }
 
+=======
+}
+>>>>>>> optimisations
