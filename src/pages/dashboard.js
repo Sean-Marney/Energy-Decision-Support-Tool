@@ -137,6 +137,7 @@ export async function getServerSideProps({ req }) {
       },
     };
   }
+  console.log(organisationID);
   // Reads optimisations from the database
   let number = await readOptimisations(organisationID);
   // Reads the energy data from the CSV File
