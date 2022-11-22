@@ -18,6 +18,10 @@
   @apply text-gray-700 border;
 }
 
+.organisation:hover {
+  @apply underline;
+}
+
 .input_text + * {
   color: #cbd5e1;
 }
