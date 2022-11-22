@@ -134,20 +134,9 @@ export async function getStaticProps() {
         },
       ],
     });
-    const defaultOrganisations = await prisma.organisation.createMany({
-      data: [
-        {
-          orgName: "Cardiff University",
-        },
-        {
-          orgName: "Queen Elizabeth Hospital",
-        },
-      ],
-    });
     return {
       props: {
         defaultUsers,
-        defaultOrganisations,
       },
     };
   } catch (error) {
