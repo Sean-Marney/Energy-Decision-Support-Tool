@@ -19,7 +19,7 @@ export class ArchivedList extends React.Component{
     }  
     render() {
         // Maps the list to Archived optimisation
-        const listItems = this.props.list.map(optimisation => <ArchivedOptimisation optimisation = {optimisation}/>);
+        const listItems = this.props.list.map(optimisation => <ArchivedOptimisation key={'optimisation' + optimisation.id} optimisation = {optimisation}/>);
         return (
             <div>
                 {/* Title which allows you to select whether to view the archived items */}
