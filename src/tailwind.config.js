@@ -12,6 +12,9 @@ module.exports = {
         blue: {
           950: '#2B344D',
         },
+      },
+      fontSize : {
+        xxs: ['10px', '10px'],
       }
     },
   },
