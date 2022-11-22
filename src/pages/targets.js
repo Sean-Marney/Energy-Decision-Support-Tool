@@ -1,10 +1,15 @@
-
 import Link from "next/link";
 import { useState } from "react";
 import styles from "../styles/Form.module.css";
 
 export default function Targets() {
   const progressData = {
+    energy: 500,
+    cost: 784,
+    carbon: 8,
+  };
+
+  const progressDataMonth = {
     energy: 1325,
     cost: 1846,
     carbon: 12,
@@ -21,6 +26,10 @@ export default function Targets() {
   const [energyProgress, setEnergyProgress] = useState("88%");
   const [costProgress, setCostProgress] = useState("80%");
   const [carbonProgress, setCarbonProgress] = useState("100%");
+
+  const [energyProgressMonth, setEnergyProgressMonth] = useState("88%");
+  const [costProgressMonth, setCostProgressMonth] = useState("80%");
+  const [carbonProgressMonth, setCarbonProgressMonth] = useState("100%");
 
   const handleProgress = () => {
     setEnergyProgress(
@@ -49,6 +58,33 @@ export default function Targets() {
     setIsSaved(true);
   };
 
+  const handleMonthProgress = () => {
+    setEnergyProgressMonth(
+      `${
+        (progressDataMonth.energy / parseInt(energy)) * 100 > 100
+          ? 100
+          : (progressDataMonth.energy / parseInt(energy)) * 100
+      }%`
+    );
+
+    setCostProgressMonth(
+      `${
+        (progressDataMonth.cost / parseInt(cost)) * 100 > 100
+          ? 100
+          : (progressDataMonth.cost / parseInt(cost)) * 100
+      }%`
+    );
+
+    setCarbonProgressMonth(
+      `${
+        (progressDataMonth.carbon / parseInt(carbon)) * 100 > 100
+          ? 100
+          : (progressDataMonth.carbon / parseInt(carbon)) * 100
+      }%`
+    );
+    setIsSaved(true);
+  };
+
   return (
     <div className="container mx-auto text-center p-5 h-full">
       <div className="container mx-auto text-center px-5 py-10 h-full bg-white rounded-md shadow-lg">
@@ -59,8 +95,8 @@ export default function Targets() {
                 Targets
                 <div className="w-2/5 h-1.5 mb-4 dark:bg-gray-700">
                   <div
-                    className="bg-red-700 h-1.5 dark:bg-red-700"
-                    style={{ width: "100%" }}
+                    className="h-1.5"
+                    style={{ width: "100%", background: "#D4374A" }}
                   ></div>
                 </div>
               </div>
@@ -75,64 +111,42 @@ export default function Targets() {
                   Progress
                   <div className="w-2/5 h-1.5 mb-4 dark:bg-gray-700">
                     <div
-                      className="bg-red-700 h-1.5 dark:bg-red-700"
-                      style={{ width: "100%" }}
+                      className="h-1.5"
+                      style={{ width: "100%", background: "#D4374A" }}
                     ></div>
                   </div>
                 </div>
               )}
               <div className="mt-2">
                 <button
-                  className={`rounded-l-3xl pl-5 pr-5 relative text-sm ${
-                    targetType === "week"
-                      ? "bg-red-700 text-white"
-                      : "bg-white text-black"
+                  className={`rounded-l-3xl pl-5 pr-5 pt-2 pb-2 relative text-sm ${
+                    targetType === "week" ? "text-white" : "bg-white text-black"
                   }`}
-                  onClick={() => setTargetType("week")}
+                  onClick={() => {
+                    setTargetType("week");
+                    isSaved && handleProgress();
+                  }}
+                  style={{
+                    background: targetType === "week" ? "#D4374A" : "",
+                  }}
                 >
                   Week
-                  <div className="inline-flex absolute -top-3 -right-0 justify-center items-center w-4 h-5 text-xs font-bold text-grey bg-yellow-300 border-2 border-stone-400 dark:border-gray-900">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="#57534e"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="#57534e"
-                      class="w-2 h-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                      />
-                    </svg>
-                  </div>
                 </button>
                 <button
-                  className={`rounded-r-3xl pl-5 pr-5 relative text-sm ${
+                  className={`rounded-r-3xl pl-5 pr-5 pt-2 pb-2 relative text-sm ${
                     targetType === "month"
-                      ? "bg-red-700 text-white"
+                      ? "text-white"
                       : "bg-white text-black"
                   }`}
-                  onClick={() => setTargetType("month")}
+                  onClick={() => {
+                    setTargetType("month");
+                    isSaved && handleMonthProgress();
+                  }}
+                  style={{
+                    background: targetType === "month" ? "#D4374A" : "",
+                  }}
                 >
                   Month
-                  <div className="inline-flex absolute -top-3 -right-0 justify-center items-center w-4 h-5 text-xs font-bold text-grey bg-yellow-300 border-2 border-stone-400 dark:border-gray-900">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="#57534e"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="#57534e"
-                      class="w-2 h-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-                      />
-                    </svg>
-                  </div>
                 </button>
               </div>
             </div>
@@ -196,7 +210,11 @@ export default function Targets() {
                     ? "bg-slate-400"
                     : "bg-slate-700 hover:bg-slate-600"
                 }`}
-                onClick={() => handleProgress()}
+                onClick={() =>
+                  targetType === "week"
+                    ? handleProgress()
+                    : handleMonthProgress()
+                }
                 disabled={!(energy && cost && carbon)}
               >
                 <svg
@@ -260,8 +278,14 @@ export default function Targets() {
               <div className="w-1/2">
                 <div class="w-full bg-slate-700 dark:bg-slate-700 h-10 mt-5">
                   <div
-                    class="flex items-center p-2 bg-red-700 text-2xl font-black text-white text-left p-0.5 leading-none h-10"
-                    style={{ width: energyProgress }}
+                    class="flex items-center p-2 text-2xl font-black text-white text-left p-0.5 leading-none h-10"
+                    style={{
+                      width:
+                        targetType === "week"
+                          ? energyProgress
+                          : energyProgressMonth,
+                      background: "#D4374A",
+                    }}
                   >
                     {progressData.energy}
                     <span className="pl-2">kWh</span>
@@ -269,8 +293,14 @@ export default function Targets() {
                 </div>
                 <div class="w-full bg-slate-700 dark:bg-slate-700 h-10 mt-10">
                   <div
-                    class="flex items-center p-2 bg-red-700 text-2xl font-black text-white text-left p-0.5 leading-none h-10"
-                    style={{ width: costProgress }}
+                    class="flex items-center p-2 text-2xl font-black text-white text-left p-0.5 leading-none h-10"
+                    style={{
+                      width:
+                        targetType === "week"
+                          ? costProgress
+                          : costProgressMonth,
+                      background: "#D4374A",
+                    }}
                   >
                     <span>£</span>
                     {progressData.cost}
@@ -278,8 +308,14 @@ export default function Targets() {
                 </div>
                 <div class="w-full bg-slate-700 dark:bg-slate-700 h-10 mt-10">
                   <div
-                    class="flex items-center p-2 bg-red-700 text-2xl font-black text-white text-left p-0.5 leading-none h-10"
-                    style={{ width: carbonProgress }}
+                    class="flex items-center p-2 text-2xl font-black text-white text-left p-0.5 leading-none h-10"
+                    style={{
+                      width:
+                        targetType === "week"
+                          ? carbonProgress
+                          : carbonProgressMonth,
+                      background: "#D4374A",
+                    }}
                   >
                     {progressData.carbon}
                     <span className="pl-2">
