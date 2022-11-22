@@ -200,7 +200,6 @@ export async function readTargets(organisationID){
         data[0] = weekly;
         data[1] = monthly;
     };
-    console.log(data);
     // Returns the data
     return data;
   }
