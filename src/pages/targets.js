@@ -21,6 +21,10 @@ export default function Targets() {
   const [cost, setCost] = useState("");
   const [carbon, setCarbon] = useState("");
 
+  const [energyMonth, setEnergyMonth] = useState("");
+  const [costMonth, setCostMonth] = useState("");
+  const [carbonMonth, setCarbonMonth] = useState("");
+
   const [isSaved, setIsSaved] = useState(false);
 
   const [energyProgress, setEnergyProgress] = useState("88%");
@@ -61,25 +65,25 @@ export default function Targets() {
   const handleMonthProgress = () => {
     setEnergyProgressMonth(
       `${
-        (progressDataMonth.energy / parseInt(energy)) * 100 > 100
+        (progressDataMonth.energy / parseInt(energyMonth)) * 100 > 100
           ? 100
-          : (progressDataMonth.energy / parseInt(energy)) * 100
+          : (progressDataMonth.energy / parseInt(energyMonth)) * 100
       }%`
     );
 
     setCostProgressMonth(
       `${
-        (progressDataMonth.cost / parseInt(cost)) * 100 > 100
+        (progressDataMonth.cost / parseInt(costMonth)) * 100 > 100
           ? 100
-          : (progressDataMonth.cost / parseInt(cost)) * 100
+          : (progressDataMonth.cost / parseInt(costMonth)) * 100
       }%`
     );
 
     setCarbonProgressMonth(
       `${
-        (progressDataMonth.carbon / parseInt(carbon)) * 100 > 100
+        (progressDataMonth.carbon / parseInt(carbonMonth)) * 100 > 100
           ? 100
-          : (progressDataMonth.carbon / parseInt(carbon)) * 100
+          : (progressDataMonth.carbon / parseInt(carbonMonth)) * 100
       }%`
     );
     setIsSaved(true);
@@ -162,8 +166,12 @@ export default function Targets() {
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
                     type="text"
                     name="Energy Consumption"
-                    value={energy}
-                    onChange={(e) => setEnergy(e.target.value)}
+                    value={targetType === "week" ? energy : energyMonth}
+                    onChange={(e) =>
+                      targetType === "week"
+                        ? setEnergy(e.target.value)
+                        : setEnergyMonth(e.target.value)
+                    }
                   />
                   <span className="pl-2 text-4xl font-black text-gray-800">
                     kW h
@@ -181,8 +189,12 @@ export default function Targets() {
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
                     type="text"
                     name="Cost"
-                    value={cost}
-                    onChange={(e) => setCost(e.target.value)}
+                    value={targetType === "week" ? cost : costMonth}
+                    onChange={(e) =>
+                      targetType === "week"
+                        ? setCost(e.target.value)
+                        : setCostMonth(e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -194,8 +206,12 @@ export default function Targets() {
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
                     type="text"
                     name="Carbon Emissions"
-                    value={carbon}
-                    onChange={(e) => setCarbon(e.target.value)}
+                    value={targetType === "week" ? carbon : carbonMonth}
+                    onChange={(e) =>
+                      targetType === "week"
+                        ? setCarbon(e.target.value)
+                        : setCarbonMonth(e.target.value)
+                    }
                   />
                   <span className="pl-2 text-4xl font-black text-gray-800">
                     tCO<sub>2</sub>e
@@ -206,7 +222,11 @@ export default function Targets() {
             <div className="flex items-baseline flex-col mt-6">
               <button
                 class={`tracking-wide text-gray-50 text-sm font-bold py-2 px-16 inline-flex items-center ${
-                  !(energy && cost && carbon)
+                  (
+                    targetType === "week"
+                      ? !(energy && cost && carbon)
+                      : !(energyMonth && costMonth && carbonMonth)
+                  )
                     ? "bg-slate-400"
                     : "bg-slate-700 hover:bg-slate-600"
                 }`}
@@ -215,7 +235,11 @@ export default function Targets() {
                     ? handleProgress()
                     : handleMonthProgress()
                 }
-                disabled={!(energy && cost && carbon)}
+                disabled={
+                  targetType === "week"
+                    ? !(energy && cost && carbon)
+                    : !(energyMonth && costMonth && carbonMonth)
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -241,15 +265,21 @@ export default function Targets() {
               <div className="w-1/2">
                 <div className="flex items-baseline flex-col mt-6">
                   <div className="text-sm">Energy Consumption</div>
-                  <div className="text-4xl font-black">{energy}</div>
+                  <div className="text-4xl font-black">
+                    {targetType === "week" ? energy : energyMonth}
+                  </div>
                 </div>
                 <div className="flex items-baseline flex-col mt-6">
                   <div className="text-sm">Cost</div>
-                  <div className="text-4xl font-black">£ {cost}</div>
+                  <div className="text-4xl font-black">
+                    £ {targetType === "week" ? cost : costMonth}
+                  </div>
                 </div>
                 <div className="flex items-baseline flex-col mt-6">
                   <div className="text-sm">Carbon Emissions</div>
-                  <div className="text-4xl font-black">{carbon}</div>
+                  <div className="text-4xl font-black">
+                    {targetType === "week" ? carbon : carbonMonth}
+                  </div>
                 </div>
                 <div className="flex items-baseline flex-col mt-6">
                   <button
@@ -287,7 +317,9 @@ export default function Targets() {
                       background: "#D4374A",
                     }}
                   >
-                    {progressData.energy}
+                    {targetType === "week"
+                      ? progressData.energy
+                      : progressDataMonth.energy}
                     <span className="pl-2">kWh</span>
                   </div>
                 </div>
@@ -303,7 +335,9 @@ export default function Targets() {
                     }}
                   >
                     <span>£</span>
-                    {progressData.cost}
+                    {targetType === "week"
+                      ? progressData.cost
+                      : progressDataMonth.cost}
                   </div>
                 </div>
                 <div class="w-full bg-slate-700 dark:bg-slate-700 h-10 mt-10">
@@ -317,7 +351,9 @@ export default function Targets() {
                       background: "#D4374A",
                     }}
                   >
-                    {progressData.carbon}
+                    {targetType === "week"
+                      ? progressData.carbon
+                      : progressDataMonth.carbon}
                     <span className="pl-2">
                       tCO<sub>2</sub>e
                     </span>
