@@ -23,7 +23,7 @@ export class ArchivedList extends React.Component{
         return (
             <div>
                 {/* Title which allows you to select whether to view the archived items */}
-                <div className="flex flex-row bg-blue-950 w-40 object-right mt-2">
+                <div className="flex flex-row bg-blue-950 w-60 object-right mt-2">
                     <div className="basis-1/5">
                         <Image
                                 src={archive}
@@ -32,12 +32,12 @@ export class ArchivedList extends React.Component{
                                 alt= "Archive"
                         />
                     </div>
-                    <div className="basis-4/5" onClick={this.showArchivedItems}>
+                    <div className="basis-4/5 cursor-pointer" onClick={this.showArchivedItems}>
                         <h1 className="text-white text-left">Archived Items</h1>   
                     </div>
                 </div>
                 {/* Displays list of archived options here */}
-                <div id = "ArchivedList" className="border-2 shadow w-40" ref={this.showArchiveButton} style={{visibility:"hidden"}}>
+                <div id = "ArchivedList" className="border-2 shadow w-60" ref={this.showArchiveButton} style={{visibility:"hidden"}}>
                 {listItems}
                 </div> 
             </div>               

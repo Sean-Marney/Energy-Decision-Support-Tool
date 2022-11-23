@@ -22,12 +22,12 @@ export default function Optimisations({data}) {
                 <ArchivedList list={data[1]}/>
             </div>
         </div>        
-        <button
+        {/* <button
           className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 bg-gray-300"
           onClick={handleSignOut}
         >
           Sign Out
-        </button>
+        </button> */}
       </div>
   );
 }

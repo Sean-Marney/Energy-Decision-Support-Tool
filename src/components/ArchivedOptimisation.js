@@ -25,26 +25,26 @@ export class ArchivedOptimisation extends React.Component {
         // Sets the background colour depending on the priority of the optimisation
         let colour;
         if (this.props.optimisation.priority == "3"){
-            colour = "basis-1/6 bg-green-600 w-1 h-6 rounded-sm";
+            colour = "basis-1/6 bg-green-600 w-1 h-9 rounded-sm";
         }else if (this.props.optimisation.priority == "2"){
-            colour = "basis-1/6 bg-yellow-600 w-1 h-6 rounded-sm";
+            colour = "basis-1/6 bg-yellow-600 w-1 h-9 rounded-sm";
         }else{
-            colour = "basis-1/6 bg-red-600 w-1 h-6 rounded-sm";
+            colour = "basis-1/6 bg-red-600 w-1 h-9 rounded-sm";
         }  
     return (
         // Shows the details of the archived optimisation
-        <div className="border-slate-800/75 border-2 rounded-sm" ref={this.showArchiveButton} onClick={this.handleUnarchive}>
+        <div className="border-slate-800/75 border-2 rounded-sm cursor-pointer h-12 w-60" ref={this.showArchiveButton} onClick={this.handleUnarchive}>
             <div className="flex flex-row m-1">
                     <div className={colour}>
                         <Image
                             src={tips}
-                            height={25}
-                            width={25}
+                            height={36}
+                            width={36}
                             alt= "Tip"
                         />
                     </div>
                     <div className="basis-5/6">
-                        <p className="text-xxs">{this.props.optimisation.title}</p>    
+                        <p className="font-bold ml-2">{this.props.optimisation.title}</p>    
                     </div>
             </div> 
         </div>

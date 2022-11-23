@@ -33,7 +33,7 @@ export class Optimisation extends React.Component {
         colour = "w-8 rounded-sm ml-1 mt-1 bg-red-600";
     }  
     return (
-        <div className="border-2 m-2 shadow">
+        <div className="border-2 m-2 shadow bg-white">
             <div className="flex flex-row">
                 {/* Icon with background set due to the priority  */}
                 <div className="basis-1/6">
@@ -59,8 +59,8 @@ export class Optimisation extends React.Component {
             <div className="flex flex-row">
                 {/* Option to archive the optimisation */}
                     <div className="basis-1/2"></div>
-                    <div className="basis-1/2 m-3 shadow"  onClick={this.handleArchive}>
-                        <div className="flex flex-row bg-blue-950 w-40 object-right">
+                    <div className="basis-1/2 m-3 shadow cursor-pointer"  onClick={this.handleArchive}>
+                        <div className="flex flex-row bg-blue-950 w-60 object-right">
                             <div className="basis-1/4">
                                     <Image
                                         src={archive}

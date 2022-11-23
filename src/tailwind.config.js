@@ -15,7 +15,7 @@ module.exports = {
         'cardiff-blue': '#2B344D',
       },
       fontSize : {
-        xxs: ['10px', '10px'],
+        xxs: ['15px', '15px'],
       }
     },
   },

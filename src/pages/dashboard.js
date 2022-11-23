@@ -1,13 +1,14 @@
 import { signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import Image from 'next/image'
-import React from 'react';
+import * as React from "react";
 import { calculateEnergyData } from '../lib/csv';
 import { readTargets } from '../lib/database_functions';
 import { readUnArchivedOptimisations } from '../lib/database_functions';
 import { KPIContainer }  from '../components/KPIContainer';
 import { RedLine } from '../components/RedLine';
 import { router } from "next/router";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
@@ -29,7 +30,7 @@ export default function Dashboard({data}) {
             <KPIContainer title="Site KPIs last month" data = {data[0]} target = {data[4]}/>    
           </div>
 {/* Optimisations section */}
-          <div className="basis-1/5 border-2 m-4 shadow" onClick={selectOptimisations}>
+          <div className="basis-1/5 border-2 m-4 shadow cursor-pointer" onClick={selectOptimisations}>
             <div className = "flex flex-col">
                 <h3 className="text-xl text-left">Pending optimisations</h3>
                 <RedLine />
@@ -69,7 +70,7 @@ export default function Dashboard({data}) {
           </div>
         </div> 
 {/* Code for insights if we wanted to add them to the page */}
-                {/* <div className='border-2 m-4 shadow'>
+        <div className='border-2 m-4 shadow'>
         <h3 className="text-3xl">Insights</h3>
         <div className="flex flex-row">
         <div className="basis-1/2">
@@ -107,15 +108,9 @@ For more information, visit gov.uk.</p>
             </div>
           </div>
         </div>  
-        </div>   */}
+        </div>  
       </main>
       <div className="flex justify-center">
-        <button
-          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 bg-gray-300"
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </button>
       </div>
 
     </div>
