@@ -4,11 +4,15 @@ import path from 'path';
 const postsDirectory = path.join(process.cwd(), 'public');
 
 function readCSVFile(organisation){
-    // Reads the CSV file with all the energy data for the organisation
-    const file = organisation + ".csv";
-    const fullPath = path.join(postsDirectory,"/",file);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    return fileContents.split("\n");
+    try{
+      // Reads the CSV file with all the energy data for the organisation
+      const file = organisation + ".csv";
+      const fullPath = path.join(postsDirectory,"/",file);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      return fileContents.split("\n");
+    }catch{
+      return -1;
+    }
 }
 
 function readEnergyData(content){
@@ -55,9 +59,12 @@ function readEnergyData(content){
 }
 
 export function calculateEnergyData(organisation) {
-
     // Opens the data file and reads the data from within
     let content = readCSVFile(organisation);
-    let data = readEnergyData(content);
-    return data;
+    if(content  == - 1){
+      return [{"energyUsage":0,"energyCost":0,"carbonEmissions":0},{"energyUsage":0,"energyCost":0,"carbonEmissions":0}]
+    }else{
+      let data = readEnergyData(content);
+      return data;
+    }
   };
