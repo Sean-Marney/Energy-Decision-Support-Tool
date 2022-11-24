@@ -51,7 +51,6 @@ export default function Organisation({ getUsers }) {
           Add New User
         </Link>
       </div>
-
       <div className="text-xl">
         <br />
         <b>Manage Users:</b>
