@@ -92,3 +92,21 @@ export async function readArchivedOptimisations(organisationID){
       };
     return optimisations;
 }      
+
+// Function to read the sites for an organisation
+export async function readSites(organisationName){
+  // Reads unarchived optimisations in the database
+  let sites;  
+  try {
+      sites = await prisma.site.findMany({
+        where: {
+          organisation: organisationName
+        }, select: {
+          name: true,
+        },
+      });
+    } catch (error) {
+        console.log(error);
+    };
+  return sites;
+}

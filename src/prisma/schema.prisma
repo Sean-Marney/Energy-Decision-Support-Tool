@@ -23,6 +23,14 @@ model Organisation {
   // users   User[] // not stored
 }
 
+model Site {
+  id           Int    @id @default(autoincrement())
+  name        String
+  organisation String
+  // organisation   Organisation @relation(fields: [organisationId], references: [id]) // not stored
+  // organisationId Int
+}
+
 model User {
   id           Int    @id @default(autoincrement())
   email        String @unique

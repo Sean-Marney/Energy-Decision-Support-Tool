@@ -17,5 +17,6 @@ INSERT INTO `energydss_db`.`optimisations` (`organisation`, `priority`, `title`,
 INSERT INTO `energydss_db`.`optimisations` (`organisation`, `priority`, `title`, `body`, `archived`) VALUES ('Cardiff University', '2', 'Reduce heating', 'Reduces electricity consumption and cost in the summer', '0');
 INSERT INTO `energydss_db`.`optimisations` (`organisation`, `priority`, `title`, `body`, `archived`) VALUES ('Cardiff University', '1', 'Install solar panels', 'Generate own electricity', '0');
 INSERT INTO `energydss_db`.`optimisations` (`organisation`, `priority`, `title`, `body`, `archived`) VALUES ('Cardiff University', '1', 'Turn off lights', 'turn off lights to save cost', '0');
-
+INSERT INTO `energydss_db`.`site` (`name`, `organisation`) VALUES ('Abacws', 'Cardiff University');
+INSERT INTO `energydss_db`.`site` (`name`, `organisation`) VALUES ('Students Union', 'Cardiff University');
 
