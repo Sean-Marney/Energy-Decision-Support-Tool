@@ -19,17 +19,28 @@ export default function UploadEnergyData({data}) {
     // setCreateObjectURL(URL.createObjectURL(selectedFile));
   };
   async function uploadToServer(){
-    try {
-      const body = new FormData();
-      body.append("file", selectedFile);
-      const response = await fetch("http://localhost:3000/api/auth/uploadFile", {
-        method: "POST",
-        body
-      });
-      location.reload();
-    } catch (error) {
+    if (validateInputs()){
+      try {
+        const body = new FormData();
+        body.append("file", selectedFile);
+        const response = await fetch("http://localhost:3000/api/auth/uploadFile", {
+          method: "POST",
+          body
+        });
+        location.reload();
+      } catch (error) {
+      }
+    }
+
+  }
+
+  function validateInputs(){
+    let valid = true;
+    if (selectedFile.type != "text/csv"){
+      valid = false;
     }
   }
+
 
 
   return (
