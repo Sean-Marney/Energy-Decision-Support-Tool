@@ -1,56 +1,58 @@
 import Head from "next/head";
 import styles from "../../../../styles/Form.module.css";
-// npm install react-icons --save
 import { useState } from "react";
-// npm install formik --save
-import { useRouter, router } from "next/router";
+import { useRouter} from "next/router";
 import { getSession } from "next-auth/react";
 import { readSites } from "../../../../lib/database_functions";
-import axios from 'axios';
+import { FaFileCsv } from 'react-icons/fa';
+import { MdDriveFileRenameOutline } from 'react-icons/Md';
+import {GrMapLocation} from 'react-icons/Gr';
 
 export default function UploadEnergyData({data}) {
   const [selectedFile, setSelectedFile] = useState();
-  const [createObjectURL, setCreateObjectURL] = useState(null);
   const router = useRouter();
   const { orgName } = router.query;
   const sitesOption = data.map(site => <option value={site.name}>{site.name}</option>);
-  let validFile, validSite;
+  let validFile = false, validTitle =  false;
+  let defaultValue = '${styles.input_group}';
   function onFileChange (){
     setSelectedFile(event.target.files[0]);
-    // setCreateObjectURL(URL.createObjectURL(selectedFile));
-    // if (event.target.files[0].type != "text/csv"){
-    //   validFile = true;
-    // }
   };
-
-
+  function validInput (){
+    let validInput = true;
+    if (selectedFile != "text/csv"){
+      validInput = false;
+    }
+    let regex = /[A-Za-z0-9{1,20}]+/i;
+    if (!regex.test(form.title.value)){
+      validInput = false;
+    }
+    return validInput;
+  }  
   async function uploadToServer(){
-      try {
-        const body = new FormData();
-        body.append("file", selectedFile);
-        body.append("site", form.site.value);
-        body.append("organisation", orgName);
-        body.append("title", form.title.value);
-        const response = await fetch("http://localhost:3000/api/auth/uploadFile", {
-          method: "POST",
-          body
-        });
-        alert("All good");
-      } catch (error) {
-      }
+    if (validInput()){
+      try{
+            const body = new FormData();
+            body.append("file", selectedFile);
+            body.append("site", form.site.value);
+            body.append("organisation", orgName);
+            body.append("title", form.title.value);
+            const response = await fetch("http://localhost:3000/api/auth/uploadFile", {
+              method: "POST",
+              body
+            }).then(
+              (res) =>
+                res.json().then((data) => {
+                  if (data) router.push("http://localhost:3000/admin/organisations");
+                })
+            );
+          } catch (error) {
+          }
+          }
+    else{
+      alert("Invalid input")
+    }
   }
-
-  // function validateInputs(){
-  //   let valid = true;
-  //   if (selectedFile.type != "text/csv"){
-  //     valid = false;
-  //   }
-  //   if (form.site.value ==  "null"){
-  //     valid = false;
-  //   }
-  // }
-
-
 
   return (
     <div>
@@ -67,11 +69,8 @@ export default function UploadEnergyData({data}) {
 
         <form className="flex flex-col gap-5" onSubmit={uploadToServer} name = "form">
           <div
-            className={`${styles.input_group} ${
-              !{validFile}
-                ? "border-rose-600"
-                : ""
-            }`}
+            className={`${styles.input_group}`}
+            id = "file"
           >
             <input
               className={styles.input_text}
@@ -79,34 +78,40 @@ export default function UploadEnergyData({data}) {
               name="file"
               placeholder="Energy Data"
               onChange={onFileChange}
+              required
             />
+             <span className="icon flex items-center px-4">
+              <FaFileCsv size={25} />
+              </span>
           </div>
           <div
-            className={`${styles.input_group} ${
-              !{validFile}
-                ? "border-rose-600"
-                : ""
-            }`}
+            className={`${styles.input_group}`}
           >
             <input
               className={styles.input_text}
               type={"text"}
               name="title"
               placeholder="File name"
+              required
             />
+            <span className="icon flex items-center px-4">
+              <MdDriveFileRenameOutline size={25} />
+            </span>
           </div>
           <div
-            className={`${styles.input_group} ${
-              false ? "border-rose-600" : ""
-            }`}
+            className={`${styles.input_group}`}
           >
             <select
               className={styles.input_text}
               name="site"
+              placeholder="Select a Site"
+              required
             >
-              <option value="null">Select A Site</option>
               {sitesOption}
             </select>
+            <span className="icon flex items-center px-4">
+              <GrMapLocation size={25} />
+              </span>
           </div>
 
           <div className="input-button">
