@@ -51,7 +51,17 @@ export default function Organisation({ getUsers }) {
           Add New User
         </Link>
       </div>
-      <div className="text-xl">
+
+      <div className="flex justify-center">
+        <Link
+          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
+          href={`/admin/organisations/create-optimisation/${orgName}`}
+        >
+          Add New Optimisation
+        </Link>
+      </div>
+
+      <div className="text-xl text-center">
         <br />
         <b>Manage Users:</b>
         {/* Shows only users from selected organisation */}

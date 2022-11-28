@@ -20,7 +20,7 @@ export default function User({ getUsers }) {
   });
 
   return (
-    <div>
+    <div className="text-center">
       <h1>
         User profile for <b>{email}</b>
       </h1>

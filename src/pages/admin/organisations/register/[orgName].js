@@ -51,7 +51,7 @@ export default function RegisterUserInOrganisation() {
           <h1 className="text-grey-800 text-4xl font-bold py-4">
             Register a New User
           </h1>
-          <p className="w-3/4 mx-auto text-gray-400">{orgName}</p>
+          <p className="w-3/4 mx-auto text-center text-gray-400">{orgName}</p>
         </div>
 
         <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>

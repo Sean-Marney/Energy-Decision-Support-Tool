@@ -38,7 +38,7 @@ export default function ManageOrganisations({ getOrganisations }) {
       </div>
 
       {/* Show all organisations as dynamic links to their own page */}
-      <div className="text-xl">
+      <div className="text-xl text-center">
         <b>Manage Organisations:</b>
         <ul>
           {getOrganisations.map((organisation) => (
