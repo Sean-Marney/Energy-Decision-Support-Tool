@@ -9,14 +9,14 @@ export const config = {
   }
 };
 
-async function saveFile(file){
+async function saveFile(file, site, organisation,title){
   try {
-    let organisation = "Cardiff University";
-    let site = "Abacws";
+    title = title +".csv";
     const data = fs.readFileSync(file[0].filepath);
     const mainDirectory = path.join(process.cwd(),"/..");
     const postsDirectory = path.join(mainDirectory, 'energyData/',organisation,"/",site,"/");
-    const fullPath = path.join(postsDirectory,file[0].originalFilename);
+    const fullPath = path.join(postsDirectory,title);
+    // console.log(fullPath);
     try {
       if (!fs.existsSync(path.join(mainDirectory, 'energyData/',organisation))) {
         fs.mkdirSync(path.join(mainDirectory, 'energyData/',organisation));
@@ -40,7 +40,8 @@ export default async function handler(req,res){
   try {
     const form = new IncomingForm();
     form.parse(req, async function (err, fields, files) {
-      await saveFile(files.file);
+      console.log(fields.title[0]);
+      await saveFile(files.file,fields.site[0],fields.organisation[0],fields.title[0]);
       return res.status(201).send("");
     });
   } catch (error) {
