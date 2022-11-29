@@ -4,10 +4,12 @@ import styles from "../../../../styles/Form.module.css";
 import { createOptimisationValidate } from "../../../../lib/validate";
 import Head from "next/head";
 import { HiAtSymbol } from "react-icons/hi";
+import { getSession } from "next-auth/react";
 
 export default function createOptimisation() {
   const router = useRouter();
   const { orgName } = router.query;
+  console.log(orgName);
   const formik = useFormik({
     initialValues: {
       organisation: orgName,
@@ -134,4 +136,10 @@ export default function createOptimisation() {
       </section>
     </div>
   );
+}
+
+import authorityCheck from "/services/authorityCheck";
+
+export async function getServerSideProps({ req }) {
+  return authorityCheck(await getSession({ req }), ["admin"]);
 }
