@@ -1,18 +1,31 @@
 import fs from 'fs';
 import path from 'path';
 
-const postsDirectory = path.join(process.cwd(), 'public');
-
+let postsDirectory =  path.join(process.cwd(),"/..");
 function readCSVFile(organisation){
     try{
+      postsDirectory = path.join(postsDirectory,"energyData/",organisation,"/Abacws")
+      let file = getMostRecentFile(postsDirectory);
       // Reads the CSV file with all the energy data for the organisation
-      const file = organisation + ".csv";
       const fullPath = path.join(postsDirectory,"/",file);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       return fileContents.split("\n");
-    }catch{
+    }catch(err){
+      console.log(err);
       return -1;
     }
+}
+
+function getMostRecentFile(dir){
+  const files = orderRecentFiles(dir);
+  return files.length ? files[0].file : undefined;
+}
+
+function orderRecentFiles(dir){
+  return fs.readdirSync(dir)
+  .filter((file) => fs.lstatSync(path.join(dir, file)).isFile())
+  .map((file) => ({ file, mtime: fs.lstatSync(path.join(dir, file)).mtime }))
+  .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
 }
 
 function readEnergyData(content){
