@@ -16,7 +16,7 @@ export default function createOptimisation() {
       title: "",
       body: "",
       priority: "",
-      archived: "0",
+      archived: "",
     },
     validate: createOptimisationValidate,
     onSubmit,

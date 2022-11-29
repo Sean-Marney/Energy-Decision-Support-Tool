@@ -34,12 +34,12 @@ model User {
 }
 
 model Optimisations {
-  id           Int     @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   organisation String
   priority     String
   title        String
   body         String
-  archived     Boolean
+  archived     String
 }
 
 model Targets {
