@@ -7,7 +7,6 @@ import { readSites } from "../../../../lib/database_functions";
 import { FaFileCsv } from 'react-icons/fa';
 import { MdDriveFileRenameOutline } from 'react-icons/Md';
 import {GrMapLocation} from 'react-icons/Gr';
-import checkWhileFileExists from "../../../../lib/functions";
 
 export default function UploadEnergyData({data}) {
   const [selectedFile, setSelectedFile] = useState();
@@ -18,16 +17,20 @@ export default function UploadEnergyData({data}) {
 
   function onFileChange (){
     setSelectedFile(event.target.files[0]);
-    if (event.target.files[0].type == "text/csv") {
-      validFile = true;
+    validateFile(event.target.files[0])
+  };
+
+  function validateFile(file){
+    if (file.type == "text/csv") {
       document.getElementById("fileMessage").style.display = "none";
       document.getElementById("fileBox").style.borderColor = "green";
+      return true;
     }else{
       document.getElementById("fileMessage").style.display = "block";
       document.getElementById("fileBox").style.borderColor = "red";
-      validFile = false;
+      return false;
     }  
-  };
+  }
 
   function onTitleChange (){
     let regex = /^[a-zA-Z0-9{1,20}]+$/i;
@@ -42,8 +45,7 @@ export default function UploadEnergyData({data}) {
     }
   };
   async function uploadToServer(){
-    alert(checkWhileFileExists(form.title.value,orgName,form.site.value));
-    if (validFile && validTitle){
+    if (validateFile(selectedFile) && validTitle){
       try{
             const body = new FormData();
             body.append("file", selectedFile);
@@ -60,10 +62,11 @@ export default function UploadEnergyData({data}) {
                 })
             );
           } catch (error) {
+            console.error(error);
           }
           }
     else{
-      alert(checkWhileFileExists())
+      alert("Please check your file and title");
     }
   }  
 
