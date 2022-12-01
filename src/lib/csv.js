@@ -70,14 +70,3 @@ function readEnergyData(content){
   let weeklyData = {"energyUsage":Math.round(weeklyUsage),"energyCost":Math.round(weeklyCost),"carbonEmissions":"10"} 
   return [monthlyData,weeklyData];
 }
-
-export function calculateEnergyData(organisation) {
-    // Opens the data file and reads the data from within
-    let content = readCSVFile(organisation);
-    if(content  == - 1){
-      return [{"energyUsage":0,"energyCost":0,"carbonEmissions":0},{"energyUsage":0,"energyCost":0,"carbonEmissions":0}]
-    }else{
-      let data = readEnergyData(content);
-      return data;
-    }
-  };

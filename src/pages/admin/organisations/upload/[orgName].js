@@ -14,23 +14,34 @@ export default function UploadEnergyData({data}) {
   const { orgName } = router.query;
   const sitesOption = data.map(site => <option value={site.name}>{site.name}</option>);
   let validFile = false, validTitle =  false;
-  let defaultValue = '${styles.input_group}';
+
   function onFileChange (){
     setSelectedFile(event.target.files[0]);
+    if (event.target.files[0].type == "text/csv") {
+      validFile = true;
+      document.getElementById("fileMessage").style.display = "none";
+      document.getElementById("fileBox").style.borderColor = "green";
+    }else{
+      document.getElementById("fileMessage").style.display = "block";
+      document.getElementById("fileBox").style.borderColor = "red";
+      validFile = false;
+    }  
   };
-  function validInput (){
-    let validInput = true;
-    if (selectedFile != "text/csv"){
-      validInput = false;
-    }
-    let regex = /[A-Za-z0-9{1,20}]+/i;
+
+  function onTitleChange (){
+    let regex = /^[a-zA-Z0-9{1,20}]+$/i;
     if (!regex.test(form.title.value)){
-      validInput = false;
+      document.getElementById("titleMessage").style.display = "block";
+      document.getElementById("titleBox").style.borderColor = "red";
+      validTitle = false;
+    }else{
+      document.getElementById("titleMessage").style.display = "none";
+      document.getElementById("titleBox").style.borderColor = "green";
+      validTitle = true;
     }
-    return validInput;
-  }  
+  };
   async function uploadToServer(){
-    if (validInput()){
+    if (validFile && validTitle){
       try{
             const body = new FormData();
             body.append("file", selectedFile);
@@ -50,9 +61,9 @@ export default function UploadEnergyData({data}) {
           }
           }
     else{
-      alert("Invalid input")
+      alert(checkWhileFileExists())
     }
-  }
+  }  
 
   return (
     <div>
@@ -69,8 +80,8 @@ export default function UploadEnergyData({data}) {
 
         <form className="flex flex-col gap-5" onSubmit={uploadToServer} name = "form">
           <div
-            className={`${styles.input_group}`}
-            id = "file"
+            className={styles.input_group}
+            id = "fileBox"
           >
             <input
               className={styles.input_text}
@@ -84,8 +95,10 @@ export default function UploadEnergyData({data}) {
               <FaFileCsv size={25} />
               </span>
           </div>
+          <p className="text-rose-600" style={{display:"none"}} id = "fileMessage">File must be a CSV</p>
           <div
             className={`${styles.input_group}`}
+            id = "titleBox"
           >
             <input
               className={styles.input_text}
@@ -93,11 +106,13 @@ export default function UploadEnergyData({data}) {
               name="title"
               placeholder="File name"
               required
+              onChange={onTitleChange}
             />
             <span className="icon flex items-center px-4">
               <MdDriveFileRenameOutline size={25} />
             </span>
           </div>
+          <p className="text-rose-600" style={{display:"none"}} id = "titleMessage">Invalid file name, can not contain a space</p>
           <div
             className={`${styles.input_group}`}
           >
@@ -152,7 +167,6 @@ export async function getServerSideProps(context) {
       email: session.user.email,
     },
   });
-  // const { organisationID } = context.query;
   // Reads sites from the database
   let data = await readSites(context.params.orgName);
   // If a non-admin tries to access register page, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
