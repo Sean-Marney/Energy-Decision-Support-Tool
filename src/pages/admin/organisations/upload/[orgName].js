@@ -7,6 +7,7 @@ import { readSites } from "../../../../lib/database_functions";
 import { FaFileCsv } from 'react-icons/fa';
 import { MdDriveFileRenameOutline } from 'react-icons/Md';
 import {GrMapLocation} from 'react-icons/Gr';
+import checkWhileFileExists from "../../../../lib/functions";
 
 export default function UploadEnergyData({data}) {
   const [selectedFile, setSelectedFile] = useState();
@@ -41,6 +42,7 @@ export default function UploadEnergyData({data}) {
     }
   };
   async function uploadToServer(){
+    alert(checkWhileFileExists(form.title.value,orgName,form.site.value));
     if (validFile && validTitle){
       try{
             const body = new FormData();
