@@ -19,15 +19,17 @@ export default function Targets({data}) {
 
   const [targetType, setTargetType] = useState("week");
 
-  const [energy, setEnergy] = useState("");
-  const [cost, setCost] = useState("");
-  const [carbon, setCarbon] = useState("");
+  const [energy, setEnergy] = useState(weeklyTargets.energyTarget);
+  const [cost, setCost] = useState(weeklyTargets.costTarget);
+  const [carbon, setCarbon] = useState(weeklyTargets.carbonTarget);
 
-  const [energyMonth, setEnergyMonth] = useState("");
-  const [costMonth, setCostMonth] = useState("");
-  const [carbonMonth, setCarbonMonth] = useState("");
 
-  const [isSaved, setIsSaved] = useState(false);
+  const [energyMonth, setEnergyMonth] = useState(monthlyTargets.energyTarget);
+  const [costMonth, setCostMonth] = useState(monthlyTargets.costTarget);
+  const [carbonMonth, setCarbonMonth] = useState(monthlyTargets.carbonTarget);
+
+
+  const [isSaved, setIsSaved] = useState(true);
 
   const [energyProgress, setEnergyProgress] = useState("88%");
   const [costProgress, setCostProgress] = useState("80%");
@@ -36,6 +38,7 @@ export default function Targets({data}) {
   const [energyProgressMonth, setEnergyProgressMonth] = useState("88%");
   const [costProgressMonth, setCostProgressMonth] = useState("80%");
   const [carbonProgressMonth, setCarbonProgressMonth] = useState("100%");
+
 
   const handleProgress = () => {
     setEnergyProgress(
@@ -394,9 +397,8 @@ export async function getServerSideProps({ req }) {
 
   // Reads the energy data from the CSV File
   const energyData = calculateEnergyData(organisationID);
-
   // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
-  let targets=await readTargets(organisationID);
+  const targets=await readTargets(organisationID);
   let data = [energyData, targets];
   return {
     props: {session, data}
