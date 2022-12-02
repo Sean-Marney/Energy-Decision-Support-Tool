@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 
-let postsDirectory =  path.join(process.cwd(),"/..");
+const postsDirectory =  path.join(process.cwd(),"/..");
 function readCSVFile(organisation,site){
     try{
-      postsDirectory = path.join(postsDirectory,"energyData/",organisation,"/",site);
-      let file = getMostRecentFile(postsDirectory);
+      let dir = path.join(postsDirectory,"energyData/",organisation,"/",site);
+      let file = getMostRecentFile(dir);
       // Reads the CSV file with all the energy data for the organisation
-      const fullPath = path.join(postsDirectory,"/",file);
+      const fullPath = path.join(dir,"/",file);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       return fileContents.split("\n");
     }catch(err){

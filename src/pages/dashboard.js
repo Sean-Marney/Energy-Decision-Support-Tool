@@ -8,7 +8,7 @@ import { readUnArchivedOptimisations } from '../lib/database_functions';
 import { KPIContainer }  from '../components/KPIContainer';
 import { RedLine } from '../components/RedLine';
 import { router } from "next/router";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { readSites } from "../lib/database_functions";
 export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
@@ -146,13 +146,14 @@ export async function getServerSideProps({ req }) {
 
   // Retrieve the selected site
   // To be completed in future sprint
-  let sites = readSites(organisationID);
-  if (site.length >0){
-    siteID = sites[0].id;
-  }else{
-    siteID = general;
-  }
+  let sites = await readSites(organisationID);
 
+  if (sites.length > 0){
+    siteID = sites[0].name;
+  }else{
+    siteID = "general";
+  }
+  console.log(siteID);
   
   // Reads the energy data from the CSV File
   const data = calculateEnergyData(organisationID, siteID);

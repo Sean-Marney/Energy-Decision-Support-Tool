@@ -13,7 +13,7 @@ export default function UploadEnergyData({data}) {
   const router = useRouter();
   const { orgName } = router.query;
   const sitesOption = data.map(site => <option value={site.name}>{site.name}</option>);
-  let validFile = false, validTitle =  false;
+  let validTitle =  false;
 
   // Function to handle the file upload
   function onFileChange (){
