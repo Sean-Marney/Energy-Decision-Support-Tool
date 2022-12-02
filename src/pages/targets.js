@@ -1,21 +1,15 @@
-
 import { useState } from "react";
-
 import { getSession } from "next-auth/react";
-
 import * as React from "react";
 import { calculateEnergyData } from '../lib/csv';
-
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { readTargets } from '../lib/database_functions';
-
-
+import { updateTargets } from "../lib/database_functions";
 export default function Targets({data}) {
   const progressData = data[0][1];
   const progressDataMonth = data[0][0];
-  const weeklyTargets = data[1][0]
-  const monthlyTargets = data[1][1]
-
+  const weeklyTargets = data[1][0];
+  const monthlyTargets = data[1][1];
+  const organisationID = data[2];
 
   const [targetType, setTargetType] = useState("week");
 
@@ -39,8 +33,22 @@ export default function Targets({data}) {
   const [costProgressMonth, setCostProgressMonth] = useState("80%");
   const [carbonProgressMonth, setCarbonProgressMonth] = useState("100%");
 
+  async function handleSave(type){
+    if (type == "week"){
+      handleProgress();
+  
+    }else{
+      handleMonthProgress();
+    }
+    let energy = document.getElementById("energy").value;
+    let cost = document.getElementById("cost").value;
+    let carbon = document.getElementById("carbon").value;
+    alert(await updateTargets("energy", energy, type, organisationID));
 
-  const handleProgress = () => {
+  }
+
+
+  function handleProgress(){
     setEnergyProgress(
       `${
         (progressData.energyUsage / parseInt(energy)) * 100 > 100
@@ -67,7 +75,7 @@ export default function Targets({data}) {
     setIsSaved(true);
   };
 
-  const handleMonthProgress = () => {
+  function handleMonthProgress () {
     setEnergyProgressMonth(
       `${
         (parseInt(progressDataMonth.energyUsage) / parseInt(energyMonth)) * 100 > 100
@@ -168,6 +176,7 @@ export default function Targets({data}) {
                 <div className="text-sm">Energy Consumption</div>
                 <div>
                   <input
+                    id = "energy"
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
                     type="text"
                     name="Energy Consumption"
@@ -191,6 +200,7 @@ export default function Targets({data}) {
                     £
                   </span>
                   <input
+                    id = "cost"
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
                     type="text"
                     name="Cost"
@@ -208,6 +218,7 @@ export default function Targets({data}) {
                 <div className="text-sm">Carbon Emissions</div>
                 <div>
                   <input
+                    id = "carbon"
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
                     type="text"
                     name="Carbon Emissions"
@@ -237,9 +248,11 @@ export default function Targets({data}) {
                 }`}
                 onClick={() =>
                   targetType === "week"
-                    ? handleProgress()
-                    : handleMonthProgress()
+                    ? handleSave("week")
+                    : handleSave("month")
                 }
+
+
                 disabled={
                   targetType === "week"
                     ? !(energy && cost && carbon)
@@ -399,7 +412,7 @@ export async function getServerSideProps({ req }) {
   const energyData = calculateEnergyData(organisationID);
   // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
   const targets=await readTargets(organisationID);
-  let data = [energyData, targets];
+  let data = [energyData, targets,organisationID];
   return {
     props: {session, data}
   };

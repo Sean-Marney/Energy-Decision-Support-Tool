@@ -1,3 +1,25 @@
+export async function updateTargets(type,newValue ,length, organisation){
+    // Reads number of optimisations in the database
+    try {
+      const targets = await prisma.targets.update({
+        where: {
+          organisationID: organisation,
+          name: type,
+          timeframe : length
+        },
+        data: {
+          value: newValue,
+        }
+      });
+      return targets;
+    } catch (error) {
+        console.debug(error);
+      return error;
+    };
+}
+
+
+
 // Function to read the optimisations for the organisation
 export async function updateOptimisation(optimisationID){
     // Reads number of optimisations in the database
