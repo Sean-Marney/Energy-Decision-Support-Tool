@@ -10,20 +10,12 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { readTargets } from '../lib/database_functions';
 
 
-export default function Targets({energyData}, {targets}) {
-  // const progressData = {
-  //   energy: 500,
-  //   cost: 784,
-  //   carbon: 8,
-  // };
-  const progressData = energyData[1];
-  const progressDataMonth = energyData[0];
+export default function Targets({data}) {
+  const progressData = data[0][1];
+  const progressDataMonth = data[0][0];
+  const weeklyTargets = data[1][0]
+  const monthlyTargets = data[1][1]
 
-  // const progressDataMonth = {
-  //   energy: 1325,
-  //   cost: 1846,
-  //   carbon: 12,
-  // };
 
   const [targetType, setTargetType] = useState("week");
 
@@ -404,9 +396,9 @@ export async function getServerSideProps({ req }) {
   const energyData = calculateEnergyData(organisationID);
 
   // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
-  let targetData=await readTargets(organisationID);
-  console.log(energyData)
+  let targets=await readTargets(organisationID);
+  let data = [energyData, targets];
   return {
-    props: {session, energyData}
+    props: {session, data}
   };
 }
