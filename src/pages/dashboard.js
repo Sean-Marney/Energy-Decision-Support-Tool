@@ -143,13 +143,17 @@ export async function getServerSideProps({ req }) {
   let optimisations = await readUnArchivedOptimisations(organisationID);
   let number = optimisations.length
   let siteID;
+
+  // Retrieve the selected site
+  // To be completed in future sprint
   let sites = readSites(organisationID);
   if (site.length >0){
     siteID = sites[0].id;
   }else{
     siteID = general;
   }
-  console.log(siteID);
+
+  
   // Reads the energy data from the CSV File
   const data = calculateEnergyData(organisationID, siteID);
   // Sends all the data to the page

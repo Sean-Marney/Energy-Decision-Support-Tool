@@ -15,11 +15,13 @@ export default function UploadEnergyData({data}) {
   const sitesOption = data.map(site => <option value={site.name}>{site.name}</option>);
   let validFile = false, validTitle =  false;
 
+  // Function to handle the file upload
   function onFileChange (){
     setSelectedFile(event.target.files[0]);
     validateFile(event.target.files[0])
   };
 
+  // Validation for the file uploaded
   function validateFile(file){
     if (file.type == "text/csv") {
       document.getElementById("fileMessage").style.display = "none";
@@ -32,6 +34,7 @@ export default function UploadEnergyData({data}) {
     }  
   }
 
+  // Validation for the title
   function onTitleChange (){
     let regex = /^[a-zA-Z0-9{1,20}]+$/i;
     if (!regex.test(form.title.value)){
@@ -44,14 +47,19 @@ export default function UploadEnergyData({data}) {
       validTitle = true;
     }
   };
+
+  // Function to handle the form submission
   async function uploadToServer(){
+    // Check if the file and title is valid
     if (validateFile(selectedFile) && validTitle){
       try{
+        // Create a form data object with the file, site, title and orgName
             const body = new FormData();
             body.append("file", selectedFile);
             body.append("site", form.site.value);
             body.append("organisation", orgName);
             body.append("title", form.title.value);
+        // Makes API call 
             const response = await fetch("http://localhost:3000/api/auth/uploadFile", {
               method: "POST",
               body
