@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 let postsDirectory =  path.join(process.cwd(),"/..");
-function readCSVFile(organisation){
+function readCSVFile(organisation,site){
     try{
-      postsDirectory = path.join(postsDirectory,"energyData/",organisation,"/Abacws")
+      postsDirectory = path.join(postsDirectory,"energyData/",organisation,"/",site);
       let file = getMostRecentFile(postsDirectory);
       // Reads the CSV file with all the energy data for the organisation
       const fullPath = path.join(postsDirectory,"/",file);
@@ -70,9 +70,9 @@ function readEnergyData(content){
   let weeklyData = {"energyUsage":Math.round(weeklyUsage),"energyCost":Math.round(weeklyCost),"carbonEmissions":"10"} 
   return [monthlyData,weeklyData];
 }
-export function calculateEnergyData(organisation) {
+export function calculateEnergyData(organisation, site) {
   // Opens the data file and reads the data from within
-  let content = readCSVFile(organisation);
+  let content = readCSVFile(organisation,  site);
   if(content  == - 1){
     return [{"energyUsage":0,"energyCost":0,"carbonEmissions":0},{"energyUsage":0,"energyCost":0,"carbonEmissions":0}]
   }else{

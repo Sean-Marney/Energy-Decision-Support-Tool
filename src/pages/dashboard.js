@@ -142,8 +142,16 @@ export async function getServerSideProps({ req }) {
   // Reads optimisations from the database
   let optimisations = await readUnArchivedOptimisations(organisationID);
   let number = optimisations.length
+  let siteID;
+  let sites = readSites(organisationID);
+  if (site.length >0){
+    siteID = sites[0].id;
+  }else{
+    siteID = general;
+  }
+  console.log(siteID);
   // Reads the energy data from the CSV File
-  const data = calculateEnergyData(organisationID);
+  const data = calculateEnergyData(organisationID, siteID);
   // Sends all the data to the page
   data[2] = number;
   // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database

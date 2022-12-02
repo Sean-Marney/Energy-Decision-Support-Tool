@@ -66,7 +66,7 @@ export default function UploadEnergyData({data}) {
           }
           }
     else{
-      alert("Please check your file and title");
+      event.preventDefault();
     }
   }  
 
