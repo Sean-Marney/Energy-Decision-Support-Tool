@@ -10,18 +10,20 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { readTargets } from '../lib/database_functions';
 
 
-export default function Targets() {
-  const progressData = {
-    energy: 500,
-    cost: 784,
-    carbon: 8,
-  };
+export default function Targets({energyData}, {targets}) {
+  // const progressData = {
+  //   energy: 500,
+  //   cost: 784,
+  //   carbon: 8,
+  // };
+  const progressData = energyData[1];
+  const progressDataMonth = energyData[0];
 
-  const progressDataMonth = {
-    energy: 1325,
-    cost: 1846,
-    carbon: 12,
-  };
+  // const progressDataMonth = {
+  //   energy: 1325,
+  //   cost: 1846,
+  //   carbon: 12,
+  // };
 
   const [targetType, setTargetType] = useState("week");
 
@@ -46,25 +48,25 @@ export default function Targets() {
   const handleProgress = () => {
     setEnergyProgress(
       `${
-        (progressData.energy / parseInt(energy)) * 100 > 100
+        (progressData.energyUsage / parseInt(energy)) * 100 > 100
           ? 100
-          : (progressData.energy / parseInt(energy)) * 100
+          : (progressData.energyUsage / parseInt(energy)) * 100
       }%`
     );
 
     setCostProgress(
       `${
-        (progressData.cost / parseInt(cost)) * 100 > 100
+        (progressData.energyCost / parseInt(cost)) * 100 > 100
           ? 100
-          : (progressData.cost / parseInt(cost)) * 100
+          : (progressData.energyCost / parseInt(cost)) * 100
       }%`
     );
 
     setCarbonProgress(
       `${
-        (progressData.carbon / parseInt(carbon)) * 100 > 100
+        (progressData.carbonEmissions / parseInt(carbon)) * 100 > 100
           ? 100
-          : (progressData.carbon / parseInt(carbon)) * 100
+          : (progressData.carbonEmissions / parseInt(carbon)) * 100
       }%`
     );
     setIsSaved(true);
@@ -73,25 +75,25 @@ export default function Targets() {
   const handleMonthProgress = () => {
     setEnergyProgressMonth(
       `${
-        (progressDataMonth.energy / parseInt(energyMonth)) * 100 > 100
+        (parseInt(progressDataMonth.energyUsage) / parseInt(energyMonth)) * 100 > 100
           ? 100
-          : (progressDataMonth.energy / parseInt(energyMonth)) * 100
+          : (parseInt(progressDataMonth.energyUsage) / parseInt(energyMonth)) * 100
       }%`
     );
 
     setCostProgressMonth(
       `${
-        (progressDataMonth.cost / parseInt(costMonth)) * 100 > 100
+        (progressDataMonth.energyCost / parseInt(costMonth)) * 100 > 100
           ? 100
-          : (progressDataMonth.cost / parseInt(costMonth)) * 100
+          : (progressDataMonth.energyCost / parseInt(costMonth)) * 100
       }%`
     );
 
     setCarbonProgressMonth(
       `${
-        (progressDataMonth.carbon / parseInt(carbonMonth)) * 100 > 100
+        (progressDataMonth.carbonEmissions / parseInt(carbonMonth)) * 100 > 100
           ? 100
-          : (progressDataMonth.carbon / parseInt(carbonMonth)) * 100
+          : (progressDataMonth.carbonEmissions / parseInt(carbonMonth)) * 100
       }%`
     );
     setIsSaved(true);
@@ -399,15 +401,12 @@ export async function getServerSideProps({ req }) {
   }
 
   // Reads the energy data from the CSV File
-  const data = calculateEnergyData(organisationID);
+  const energyData = calculateEnergyData(organisationID);
 
   // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
   let targetData=await readTargets(organisationID);
-
-  console.log(targetData);
-  console.log(data);
-
+  console.log(energyData)
   return {
-    props: {session}
+    props: {session, energyData}
   };
 }
