@@ -3,25 +3,55 @@ import { getSession } from "next-auth/react";
 import * as React from "react";
 import { calculateEnergyData } from '../lib/csv';
 import { readTargets } from '../lib/database_functions';
-import { updateTargets } from "../lib/database_functions";
+
+// Function to update the targets
+// This is where there is an issue
+// Issue
+async function updateTargets(type,newValue ,length, organisation){
+  // Updates targets in the database
+  try {
+    const targets = await prisma.targets.update({
+      where: {
+        organisationID: organisation,
+        name: type,
+        timeframe : length
+      },
+      data: {
+        value: newValue,
+      }
+    });
+    return targets;
+  } catch (error) {
+      console.debug(error);
+    return error;
+  };
+}
+
+
 export default function Targets({data}) {
+  // Sets it to the energy data
   const progressData = data[0][1];
   const progressDataMonth = data[0][0];
+
+  // Stores weekly and monthly targets
   const weeklyTargets = data[1][0];
   const monthlyTargets = data[1][1];
+
+  // Stores the current organisation
   const organisationID = data[2];
 
   const [targetType, setTargetType] = useState("week");
 
+
+  // Set target data to the weekly targets
   const [energy, setEnergy] = useState(weeklyTargets.energyTarget);
   const [cost, setCost] = useState(weeklyTargets.costTarget);
   const [carbon, setCarbon] = useState(weeklyTargets.carbonTarget);
 
-
+  // Set target data to the monthly targets
   const [energyMonth, setEnergyMonth] = useState(monthlyTargets.energyTarget);
   const [costMonth, setCostMonth] = useState(monthlyTargets.costTarget);
   const [carbonMonth, setCarbonMonth] = useState(monthlyTargets.carbonTarget);
-
 
   const [isSaved, setIsSaved] = useState(true);
 
@@ -33,13 +63,16 @@ export default function Targets({data}) {
   const [costProgressMonth, setCostProgressMonth] = useState("80%");
   const [carbonProgressMonth, setCarbonProgressMonth] = useState("100%");
 
+  // Handles saving the function
   async function handleSave(type){
+    // Handles progress
     if (type == "week"){
       handleProgress();
   
     }else{
       handleMonthProgress();
     }
+    // Retrieves the values from the text box
     let energy = document.getElementById("energy").value;
     let cost = document.getElementById("cost").value;
     let carbon = document.getElementById("carbon").value;
