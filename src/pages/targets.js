@@ -43,7 +43,16 @@ export default function Targets({data}) {
     let energy = document.getElementById("energy").value;
     let cost = document.getElementById("cost").value;
     let carbon = document.getElementById("carbon").value;
-    alert(await updateTargets("energy", energy, type, organisationID));
+    let timeframe = type === 'week' ? 'weekly' : 'monthly';
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({energy,cost,carbon,organisationID,timeframe})
+    };
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/targets`, requestOptions)
+        .then(response => response.json())
+        .then(data => alert(data.response));
+    // alert(await updateTargets("energy", energy, type, organisationID));
 
   }
 
