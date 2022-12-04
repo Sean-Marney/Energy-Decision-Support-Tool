@@ -220,7 +220,7 @@ export default function Targets({data}) {
                   <input
                     id = "energy"
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
-                    type="text"
+                    type="number"
                     name="Energy Consumption"
                     value={targetType === "week" ? energy : energyMonth}
                     onChange={(e) =>
@@ -244,7 +244,7 @@ export default function Targets({data}) {
                   <input
                     id = "cost"
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
-                    type="text"
+                    type="number"
                     name="Cost"
                     value={targetType === "week" ? cost : costMonth}
                     onChange={(e) =>
@@ -262,7 +262,7 @@ export default function Targets({data}) {
                   <input
                     id = "carbon"
                     className="h-12 rounded-none border border-gray-400 outline-0 text-4xl w-60 font-black"
-                    type="text"
+                    type="number"
                     name="Carbon Emissions"
                     value={targetType === "week" ? carbon : carbonMonth}
                     onChange={(e) =>
