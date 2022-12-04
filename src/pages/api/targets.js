@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         });
 
     
-        res.status(200).json({ response: 'Records updated successfully.' })
+        res.status(200).json({ response: 'Targets updated successfully.' })
     } catch (error) {
         res.status(200).json({ response: 'Something went wrong.' })
     };
