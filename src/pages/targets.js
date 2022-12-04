@@ -326,7 +326,7 @@ export default function Targets({data}) {
                 <div className="flex items-baseline flex-col mt-6">
                   <div className="text-sm">Energy Consumption</div>
                   <div className="text-4xl font-black">
-                    {targetType === "week" ? energy : energyMonth}
+                    {targetType === "week" ? energy : energyMonth} <span className="pl-2">kWh</span>
                   </div>
                 </div>
                 <div className="flex items-baseline flex-col mt-6">
@@ -338,7 +338,9 @@ export default function Targets({data}) {
                 <div className="flex items-baseline flex-col mt-6">
                   <div className="text-sm">Carbon Emissions</div>
                   <div className="text-4xl font-black">
-                    {targetType === "week" ? carbon : carbonMonth}
+                    {targetType === "week" ? carbon : carbonMonth}  <span className="pl-2">
+                      tCO<sub>2</sub>e
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-baseline flex-col mt-6">
@@ -377,9 +379,7 @@ export default function Targets({data}) {
                       background: "#D4374A",
                     }}
                   >
-                    {targetType === "week"
-                      ? progressData.energy
-                      : progressDataMonth.energy}
+                    {targetType === "week" ? progressData.energyUsage : progressDataMonth.energyUsage}
                     <span className="pl-2">kWh</span>
                   </div>
                 </div>
@@ -394,10 +394,8 @@ export default function Targets({data}) {
                       background: "#D4374A",
                     }}
                   >
-                    <span>£</span>
-                    {targetType === "week"
-                      ? progressData.cost
-                      : progressDataMonth.cost}
+                    <span>£ {targetType === "week" ? progressData.energyCost : progressDataMonth.energyCost}</span> 
+                  
                   </div>
                 </div>
                 <div class="w-full bg-slate-700 dark:bg-slate-700 h-10 mt-10">
@@ -411,9 +409,8 @@ export default function Targets({data}) {
                       background: "#D4374A",
                     }}
                   >
-                    {targetType === "week"
-                      ? progressData.carbon
-                      : progressDataMonth.carbon}
+                    {targetType === "week" ? progressData.carbonEmissions : progressDataMonth.carbonEmissions}
+                   
                     <span className="pl-2">
                       tCO<sub>2</sub>e
                     </span>
