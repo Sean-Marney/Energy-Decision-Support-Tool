@@ -15,7 +15,7 @@ export async function getServerSideProps({ req }) {
   } catch (error) {
     return {
       redirect: {
-        destination: "/home",
+        destination: "/login",
         permanent: false,
       },
     };

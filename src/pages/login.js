@@ -11,6 +11,10 @@ import { hash } from "bcrypt";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { Button } from "../components/ui/Button";
+import { TextField } from "../components/ui/TextField";
+import { Card } from "../components/ui/Card";
+
 export default function Login() {
   const [show, setShow] = useState(false);
   const router = useRouter();
@@ -41,7 +45,7 @@ export default function Login() {
   }
 
   return (
-    <div>
+    <>
       <div>
         {/* Invalid credentials toast message */}
         <ToastContainer />
@@ -51,69 +55,30 @@ export default function Login() {
         <title>Login</title>
       </Head>
 
-      <section className="w-3/4 mx-auto flex flex-col gap-10">
-        <div className="title">
-          <h1 className="text-grey-800 text-4xl font-bold py-4">Energy DSS</h1>
-          <p className="w-3/4 mx-auto text-gray-400">
-            Empowering Energy Solutions
-          </p>
-        </div>
+      <div className="grid grid-cols-12">
+        <Card className="col-span-4 col-start-5 my-auto">
+          <section className="w-3/4 mx-auto flex flex-col gap-10">
+            <div className="title">
+              <h1 className="text-4xl font-bold py-4 afterline">Welcome to DSS</h1>
+            </div>
 
-        <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
-          <div
-            className={`${styles.input_group} ${
-              formik.errors.email && formik.touched.email
-                ? "border-rose-600"
-                : ""
-            }`}
-          >
-            <input
-              className={styles.input_text}
-              type="email"
-              name="email"
-              placeholder="Email"
-              {...formik.getFieldProps("email")}
-            />
-            <span className="icon flex items-center px-4">
-              <HiAtSymbol size={25} />
-            </span>
-          </div>
-
-          <div
-            className={`${styles.input_group} ${
-              formik.errors.password && formik.touched.password
-                ? "border-rose-600"
-                : ""
-            }`}
-          >
-            <input
-              className={styles.input_text}
-              type={`${show ? "text" : "password"}`}
-              name="password"
-              placeholder="Password"
-              {...formik.getFieldProps("password")}
-            />
-            <span
-              className="icon flex items-center px-4"
-              onClick={() => setShow(!show)}
-            >
-              <HiEye size={25} />
-            </span>
-          </div>
-
-          <div className="input-button">
-            <button className={styles.button} type="submit">
-              Login
-            </button>
-          </div>
-        </form>
-      </section>
-    </div>
+              <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
+                <TextField placeholder="Email" type="email" /><br></br>
+                <TextField placeholder="Password" type="password" /><br></br>
+                <Button>Login</Button>
+              </form>
+              <span className="text-xs">The data held on this system is private property. Access to the data is only available for authorised users and authorised purposes. Unauthorised etry contravenes the Computer Misuse Act 1990 and may incur criminal penalties as well as adamages.</span>
+              <span className="text-xs text-center">© Empowering Energy Solutions Ltd 2022</span>
+          </section>
+        </Card>
+      </div>
+    </>
   );
 }
 
 // On  loading /login, create default accounts
 // TODO: Error occurs if the database has no default users and user navigates to index before /login
+
 export async function getStaticProps() {
   console.log("Creating default accounts");
 

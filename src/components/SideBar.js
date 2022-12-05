@@ -8,7 +8,7 @@ export default function SideBar() {
   return (
     <>
       { /* Side bar */ }
-        <nav className="flex bg-cardiff-blue flex-col py-8 pl-8 justify-items-center h-full">
+        <nav className="flex bg-cardiff-blue flex-col py-8 pl-8 justify-items-center h-full pb-auto">
             <SideBarItem name="Dashboard" icon="TbDashboard" />
             <SideBarItem name="Reports" icon="TbReportSearch" />
             <SideBarItem name="Energy Flow" icon="FaProjectDiagram" />
