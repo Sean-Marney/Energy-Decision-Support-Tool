@@ -46,6 +46,6 @@ model Targets {
   id     Int     @id @default(autoincrement())
   organisation String
   name     String 
-  value     String 
+  value     Int 
   timeframe     String        
 }

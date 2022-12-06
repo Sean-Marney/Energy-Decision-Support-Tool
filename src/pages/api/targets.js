@@ -11,7 +11,7 @@ export default async function handler(req, res) {
                 timeframe: req.body.timeframe
             },
             data: {
-                value: req.body.cost,
+                value: parseInt(req.body.cost),
             }
         });
 
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
                 timeframe: req.body.timeframe
             },
             data: {
-                value: req.body.energy,
+                value: parseInt(req.body.energy),
             }
         });
 
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
                 timeframe: req.body.timeframe
             },
             data: {
-                value: req.body.carbon,
+                value: parseInt(req.body.carbon),
             }
         });
 
