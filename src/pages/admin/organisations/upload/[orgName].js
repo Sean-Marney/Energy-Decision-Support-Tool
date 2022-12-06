@@ -13,7 +13,7 @@ export default function UploadEnergyData({data}) {
   const [selectedFile, setSelectedFile] = useState();
   const router = useRouter();
   const { orgName } = router.query;
-  const sitesOption = data.map(site => <option value={site.name}>{site.name}</option>);
+  const sitesOption = data.map(site => <option value={site.name} id={site.name}>{site.name}</option>);
   const title = useRef();
   const file = useRef();
   const site = useRef();

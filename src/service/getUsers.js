@@ -10,7 +10,6 @@ export async function getUsers(session) {
     });
   } catch (error) {
     console.log(error);
-    };
-    console.log(user);
+  };
 return user;
 };  

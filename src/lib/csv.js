@@ -10,24 +10,31 @@ function fastCSV(organisation,site){
   let dir = path.join(postsDirectory,"energyData/",organisation,"/",site);
 
   let file = getMostRecentFile(dir);
-  dir = path.join(dir,"/",file);
-
-  return new Promise(resolve => { csv.parseFile(dir)
-    .on('error', error => console.error(error))
-    .on('data', row => data.push(row))
-    .on('end', rowCount => resolve(data))});
+  if (file == -1){
+    return -1;
+  }else{
+    dir = path.join(dir,"/",file);
+    return new Promise(resolve => { csv.parseFile(dir)
+      .on('error', error => console.error(error))
+      .on('data', row => data.push(row))
+      .on('end', rowCount => resolve(data))});
+  }
 }
 
 function getMostRecentFile(dir){
   const files = orderRecentFiles(dir);
-  return files.length ? files[0].file : undefined;
+  return files.length ? files[0].file : -1;
 }
 
 function orderRecentFiles(dir){
-  return fs.readdirSync(dir)
-  .filter((file) => fs.lstatSync(path.join(dir, file)).isFile())
-  .map((file) => ({ file, mtime: fs.lstatSync(path.join(dir, file)).mtime }))
-  .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+  try{
+    return fs.readdirSync(dir)
+    .filter((file) => fs.lstatSync(path.join(dir, file)).isFile())
+    .map((file) => ({ file, mtime: fs.lstatSync(path.join(dir, file)).mtime }))
+    .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+  }catch(error){
+    return -1;
+  }
 }
 
 function readEnergyData(content){
@@ -78,7 +85,7 @@ export async function calculateEnergyData(organisation, site) {
   let content = (await fastCSV(organisation,site));
   // console.log(content);
   if(content  == - 1){
-    return [{"energyUsage":0,"energyCost":0,"carbonEmissions":0},{"energyUsage":0,"energyCost":0,"carbonEmissions":0}]
+    return {"monthlyData":{"energyUsage":0,"energyCost":0,"carbonEmissions":0},"weeklyData":{"energyUsage":0,"energyCost":0,"carbonEmissions":0}};
   }else{
     let data = readEnergyData(content);
     return data;
