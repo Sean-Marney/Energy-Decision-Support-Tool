@@ -9,6 +9,8 @@ import { KPIContainer }  from '../components/KPIContainer';
 import { RedLine } from '../components/RedLine';
 import { router } from "next/router";
 import { readSites } from "../lib/database_functions";
+import { getUsers } from "../service/getUsers";
+
 export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
@@ -123,46 +125,40 @@ export async function getServerSideProps({ req }) {
 
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
-  let organisationID;
-  try {
-    const user = await prisma.user.findFirst({
-      where: {
-        email: session.user.email,
-      },
-    });
-    organisationID = user.organisation;
-  } catch (error) {
+  let user = await getUsers(session);
+  if (user.role == "admin" || user.role == "manager") {
+    let organisationID = user.organisation;
+    // Reads optimisations from the database
+    let optimisations = await readUnArchivedOptimisations(organisationID);
+    let number = optimisations.length
+    let siteID;
+
+    // Retrieve the selected site
+    // To be completed in future sprint
+    let sites = await readSites(organisationID);
+    if (sites.length > 0){
+      siteID = sites[0].name;
+    }else{
+      siteID = "general";
+    }
+    // Reads the energy data from the CSV File
+    const data = await calculateEnergyData(organisationID, siteID);
+    // Sends all the data to the page
+    data[2] = number;
+    // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
+    let targetData=await readTargets(organisationID);
+    data["weeklyTarget"] = targetData[0];
+    data["monthlyTarget"] = targetData[1];
+    // If admin or manager, show page
+    return {
+      props: {session , data}
+    };
+  }else{
     return {
       redirect: {
-        destination: "/home",
+        destination: '/',
         permanent: false,
       },
-    };
-  }
-  // Reads optimisations from the database
-  let optimisations = await readUnArchivedOptimisations(organisationID);
-  let number = optimisations.length
-  let siteID;
-
-  // Retrieve the selected site
-  // To be completed in future sprint
-  let sites = await readSites(organisationID);
-
-  if (sites.length > 0){
-    siteID = sites[0].name;
-  }else{
-    siteID = "general";
-  }
-  // Reads the energy data from the CSV File
-  const data = await calculateEnergyData(organisationID, siteID);
-  // Sends all the data to the page
-  data[2] = number;
-  // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
-  let targetData=await readTargets(organisationID);
-  data["weeklyTarget"] = targetData[0];
-  data["monthlyTarget"] = targetData[1];
-  // If admin or manager, show page
-  return {
-    props: {session , data}
-  };
+    }
+  }  
 }

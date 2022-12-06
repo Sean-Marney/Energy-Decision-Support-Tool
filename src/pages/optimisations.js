@@ -5,6 +5,7 @@ import { ArchivedList }  from '../components/ArchivedList';
 import { OptimisationList } from "../components/OptimisationList";
 import { readUnArchivedOptimisations }  from '../lib/database_functions';
 import { readArchivedOptimisations } from "../lib/database_functions";
+import { getUsers } from "../service/getUsers";
 export default function Optimisations({data}) {
   function handleSignOut() {
     signOut();
@@ -35,33 +36,24 @@ export default function Optimisations({data}) {
 // Protects route
 export async function getServerSideProps({ req }) {
     const session = await getSession({ req });
-  
-    // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
-    // TODO - Only have one instance of 'get user' code to reduce repeated code
-    let organisationID;
-    try {
-      const user = await prisma.user.findFirst({
-        where: {
-          email: session.user.email,
-        },
-      });
-      organisationID = user.organisation;
-    } catch (error) {
+    let user = await getUsers(session);
+    if (user.role == "admin" || user.role == "manager") {
+      let organisationID = user.organisation;
+      // Reads optimisations from the database
+      let optimisations = await readUnArchivedOptimisations(organisationID);
+      // Reads optimisations from the database
+      let archivedOptimisations = await readArchivedOptimisations(organisationID);
+      // If admin or manager, show page
+      let data = [optimisations, archivedOptimisations]
+      return {
+        props: {session , data}
+      };
+    }else{
       return {
         redirect: {
-          destination: "/home",
+          destination: '/',
           permanent: false,
         },
-      };
-    }
-    // Reads optimisations from the database
-    let optimisations = await readUnArchivedOptimisations(organisationID);
-    // Reads optimisations from the database
-    let archivedOptimisations = await readArchivedOptimisations(organisationID);
-    // If admin or manager, show page
-    let data = [optimisations, archivedOptimisations]
-    return {
-      props: {session , data}
-    };
+      }
+    }  
   }
-
