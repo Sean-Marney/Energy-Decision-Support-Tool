@@ -1,19 +1,21 @@
-import fs from 'fs';
+const fs = require('fs');
+const csv = require('@fast-csv/parse');
 import path from 'path';
-
+import Papa from 'papaparse';
 const postsDirectory =  path.join(process.cwd(),"/..");
-function readCSVFile(organisation,site){
-    try{
-      let dir = path.join(postsDirectory,"energyData/",organisation,"/",site);
-      let file = getMostRecentFile(dir);
-      // Reads the CSV file with all the energy data for the organisation
-      const fullPath = path.join(dir,"/",file);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      return fileContents.split("\n");
-    }catch(err){
-      console.log(err);
-      return -1;
-    }
+
+function fastCSV(organisation,site){
+  const data = [];
+  let energyData;
+  let dir = path.join(postsDirectory,"energyData/",organisation,"/",site);
+
+  let file = getMostRecentFile(dir);
+  dir = path.join(dir,"/",file);
+
+  return new Promise(resolve => { csv.parseFile(dir)
+    .on('error', error => console.error(error))
+    .on('data', row => data.push(row))
+    .on('end', rowCount => resolve(data))});
 }
 
 function getMostRecentFile(dir){
@@ -34,8 +36,8 @@ function readEnergyData(content){
     // Collecting the energy consumption, energy cost and carbon emissions
   let monthlyUsage = 0,monthlyCost = 0,weeklyUsage = 0,weeklyCost = 0;
   // Iterates through the last month and weeks data
-  let date = content[content.length-2].split(",")[0];
-  let month = date.substring(3,5);
+  let date = (content[content.length-2])[0];
+  let month = date.substring(5,7);
   let numberOfDays = 0 ;
   if (isNaN(month)== true || (parseInt(month) < 0 || parseInt(month) > 12)){
     numberOfDays = 30 
@@ -49,9 +51,9 @@ function readEnergyData(content){
   let index = content.length - ((numberOfDays*48)+1);
   while (index < (content.length-1)){
       // Retrieves the energy cost and energy data
-      let energyData = content[index].split(",");
+      let energyData = content[index];
     //  Retrieves the previous days day ahead energy cost
-      let costData = content[(index-48)].split(",");
+      let costData = content[(index-48)];
       let energyUsage = parseFloat(energyData[8]);
       // Calculates the cost for the energy usage for that half hour
       let cost = (parseFloat(energyData[11])/1000 * (parseFloat(costData[9])))
@@ -66,13 +68,15 @@ function readEnergyData(content){
       index = index + 1;
   }
   // Returns the cost, energy usage, carbon emission and target comparsion from the last month and week
-  let monthlyData = {"energyUsage":Math.round(monthlyUsage),"energyCost":Math.round(monthlyCost),"carbonEmissions":"40"} 
-  let weeklyData = {"energyUsage":Math.round(weeklyUsage),"energyCost":Math.round(weeklyCost),"carbonEmissions":"10"} 
-  return [monthlyData,weeklyData];
+  let monthlyData = {"energyUsage":Math.round(monthlyUsage),"energyCost":Math.round(monthlyCost),"carbonEmissions":"40"}; 
+  let weeklyData = {"energyUsage":Math.round(weeklyUsage),"energyCost":Math.round(weeklyCost),"carbonEmissions":"10"};
+  return {"monthlyData":monthlyData,"weeklyData":weeklyData};
 }
-export function calculateEnergyData(organisation, site) {
+export async function calculateEnergyData(organisation, site) {
   // Opens the data file and reads the data from within
-  let content = readCSVFile(organisation,  site);
+  // let content = await readCSVFile(organisation,  site);
+  let content = (await fastCSV(organisation,site));
+  // console.log(content);
   if(content  == - 1){
     return [{"energyUsage":0,"energyCost":0,"carbonEmissions":0},{"energyUsage":0,"energyCost":0,"carbonEmissions":0}]
   }else{

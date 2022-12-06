@@ -1,24 +1,29 @@
 import Head from "next/head";
 import styles from "../../../../styles/Form.module.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter} from "next/router";
 import { getSession } from "next-auth/react";
 import { readSites } from "../../../../lib/database_functions";
 import { FaFileCsv } from 'react-icons/fa';
 import { MdDriveFileRenameOutline } from 'react-icons/Md';
 import {GrMapLocation} from 'react-icons/Gr';
+import { getUsers } from "../../../../service/getUsers";
 
 export default function UploadEnergyData({data}) {
   const [selectedFile, setSelectedFile] = useState();
   const router = useRouter();
   const { orgName } = router.query;
   const sitesOption = data.map(site => <option value={site.name}>{site.name}</option>);
+  const title = useRef();
+  const file = useRef();
+  const site = useRef();
+  
   let validTitle =  false;
 
   // Function to handle the file upload
   function onFileChange (){
     setSelectedFile(event.target.files[0]);
-    validateFile(event.target.files[0])
+    validateFile(event.target.files[0]);
   };
 
   // Validation for the file uploaded
@@ -58,7 +63,7 @@ export default function UploadEnergyData({data}) {
             body.append("file", selectedFile);
             body.append("site", form.site.value);
             body.append("organisation", orgName);
-            body.append("title", form.title.value);
+            body.append("title", title.current.value);
         // Makes API call 
             const response = await fetch("http://localhost:3000/api/auth/uploadFile", {
               method: "POST",
@@ -102,6 +107,7 @@ export default function UploadEnergyData({data}) {
               name="file"
               placeholder="Energy Data"
               onChange={onFileChange}
+              ref = {file}
               required
             />
              <span className="icon flex items-center px-4">
@@ -120,6 +126,7 @@ export default function UploadEnergyData({data}) {
               placeholder="File name"
               required
               onChange={onTitleChange}
+              ref = {title}
             />
             <span className="icon flex items-center px-4">
               <MdDriveFileRenameOutline size={25} />
@@ -133,6 +140,7 @@ export default function UploadEnergyData({data}) {
               className={styles.input_text}
               name="site"
               placeholder="Select a Site"
+              ref={site}
               required
             >
               {sitesOption}
@@ -157,43 +165,19 @@ export default function UploadEnergyData({data}) {
 export async function getServerSideProps(context) {
   let req = context.req;
   const session = await getSession({req});
-  // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
-  // TODO - Only have one instance of 'get user' code to reduce repeated code
-  try {
-    const user = await prisma.user.findFirst({
-      where: {
-        email: session.user.email,
-      },
-    });
-  } catch (error) {
+  let user = await getUsers(session);
+  if (user.role == "admin"){
+    const data = await readSites(context.params.orgName);
     return {
-      redirect: {
-        destination: "/home",
-        permanent: false,
-      },
+      props: {session,data}
     };
-  }
-
-  // Gets current user
-  const user = await prisma.user.findFirst({
-    where: {
-      email: session.user.email,
-    },
-  });
-  // Reads sites from the database
-  let data = await readSites(context.params.orgName);
-  // If a non-admin tries to access register page, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
-  if (user.role !== "admin") {
+  }  
+  else{
     return {
       redirect: {
         destination: "/dashboard",
         permanent: false,
       },
-    };
-    // If admin, show page
-  } else {
-    return {
-      props: {session, data}
-    };
-  }
+    };  
+  }  
 }

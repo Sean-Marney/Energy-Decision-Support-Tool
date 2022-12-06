@@ -9,11 +9,11 @@ export class KPIContainer extends React.Component {
         <h3 className="text-xl divide-y text-left">{this.props.title}</h3>
               <RedLine />
               <br/>
-              <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target[2]} units = " KW"/>
+              <KPIData data = {this.props.data.energyUsage} targetcomparison = {this.props.target.energyTarget} units = " KW"/>
               <br/>
-              <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target[1]} units = "£"/>
+              <KPIData data = {this.props.data.energyCost} targetcomparison = {this.props.target.costTarget} units = "£"/>
               <br/>
-              <KPIData data = {this.props.data.carbonEmissions} targetcomparison = {this.props.target[0]} units = " tCO2e"/>
+              <KPIData data = {this.props.data.carbonEmissions} targetcomparison = {this.props.target.carbonTarget} units = " tCO2e"/>
       </div>
     );
   }

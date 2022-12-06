@@ -24,10 +24,10 @@ export default function Dashboard({data}) {
         <div className="flex flex-row">
 {/* KPI Data section */}
           <div className="basis-2/5 border-2 m-4 shadow">
-            <KPIContainer title="Site KPIs last week" data = {data[1]} target = {data[3]}/>    
+            <KPIContainer title="Site KPIs last week" data = {data.weeklyData} target = {data.weeklyTarget}/>    
           </div>
           <div className="basis-2/5 border-2 m-4 shadow">
-            <KPIContainer title="Site KPIs last month" data = {data[0]} target = {data[4]}/>    
+            <KPIContainer title="Site KPIs last month" data = {data.monthlyData} target = {data.monthlyTarget}/>    
           </div>
 {/* Optimisations section */}
           <div className="basis-1/5 border-2 m-4 shadow cursor-pointer" onClick={selectOptimisations}>
@@ -153,16 +153,14 @@ export async function getServerSideProps({ req }) {
   }else{
     siteID = "general";
   }
-  console.log(siteID);
-  
   // Reads the energy data from the CSV File
-  const data = calculateEnergyData(organisationID, siteID);
+  const data = await calculateEnergyData(organisationID, siteID);
   // Sends all the data to the page
   data[2] = number;
   // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
   let targetData=await readTargets(organisationID);
-  data[3] = targetData[0];
-  data[4] = targetData[1];
+  data["weeklyTarget"] = targetData[0];
+  data["monthlyTarget"] = targetData[1];
   // If admin or manager, show page
   return {
     props: {session , data}

@@ -61,20 +61,3 @@ export function registerOrgValidate(values) {
 
   return errors;
 }
-
-export function registerEnergyDataValidate(values) {
-  const errors = {};
-
-  // if (!values.file) {
-  //   errors.email = "Required";
-  // } else{
-  //   // errors.email = "Invalid email address";
-  //   alert(values.file.value);
-  // }
-  if (!values.site) {
-    errors.email = "Required to select a site";
-  } else if (values.site = "Select A Site") {
-    errors.email = "Invalid site";
-  }
-  return errors;
-}

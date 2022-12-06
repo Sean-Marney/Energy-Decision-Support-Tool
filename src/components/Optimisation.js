@@ -3,6 +3,7 @@ import archive from "public/archive.svg"
 import React from 'react';
 import Image from 'next/image';
 import { router } from "next/router";
+import url from "../url";
 
 export class Optimisation extends React.Component {
     constructor(props) {
@@ -19,8 +20,8 @@ export class Optimisation extends React.Component {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         };
-        await fetch("http://localhost:3000/api/toggleArchive", submit);
-        router.push("http://localhost:3000/optimisations");
+        await fetch(url + "/api/toggleArchive", submit);
+        router.push(url + "/optimisations");
       }
     render() {
     // Sets the colour of the icon for the optimisation based on the priority

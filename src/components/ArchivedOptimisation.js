@@ -2,6 +2,7 @@ import tips from "public/tips.svg";
 import React from 'react';
 import Image from 'next/image';
 import { router } from "next/router";
+import url from "../url";
 
 export class ArchivedOptimisation extends React.Component {
     
@@ -18,8 +19,8 @@ export class ArchivedOptimisation extends React.Component {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         };
-        await fetch("http://localhost:3000/api/toggleArchive", submit);
-        router.push("http://localhost:3000/optimisations");
+        await fetch(url+ "/api/toggleArchive", submit);
+        router.push(url+ "/optimisations");
     }
     render() {
         // Sets the background colour depending on the priority of the optimisation
