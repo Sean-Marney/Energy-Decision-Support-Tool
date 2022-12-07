@@ -1,13 +1,9 @@
-import React from "react";
+import { React, useState } from "react";
 
-export class TextField extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+export function TextField(props) {
+    const [value, setValue] = useState("")
 
-    render() {
-        return (
-        <input type={this.props.type} className="inline-block rounded bg-slate-200 focus:bg-slate-300 py-3 px-3" placeholder={this.props.placeholder} />
-        );
-    }
+    return (
+        <input type={props.type} className="inline-block rounded bg-slate-200 focus:bg-slate-300 py-3 px-3" placeholder={props.placeholder} value={value} onChange={(val) => setValue(val.value)} />
+    );
 }

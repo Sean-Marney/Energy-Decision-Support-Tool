@@ -3,7 +3,6 @@ import styles from "../styles/Form.module.css";
 import { HiAtSymbol, HiEye } from "react-icons/hi";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useFormik } from "formik";
 import loginValidate from "../lib/validate";
 import { useRouter } from "next/router";
 import { prisma } from "../lib/prisma";
@@ -18,20 +17,16 @@ import { Card } from "../components/ui/Card";
 export default function Login() {
   const [show, setShow] = useState(false);
   const router = useRouter();
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validate: loginValidate,
-    onSubmit,
-  });
+
+  var [email, setEmail] = useState("");
 
   async function onSubmit(values) {
+    console.log("RIUN")
+
     const submitStatus = await signIn("credentials", {
       redirect: false,
-      email: values.email,
-      password: values.password,
+      email: "",
+      password: "",
       callbackUrl: "/",
     });
 
@@ -62,10 +57,10 @@ export default function Login() {
               <h1 className="text-4xl font-bold py-4 afterline">Welcome to DSS</h1>
             </div>
 
-              <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
-                <TextField placeholder="Email" type="email" /><br></br>
+              <form className="flex flex-col gap-5" id="loginForm">
+                <TextField placeholder="Email" type="email" value={email} /><br></br>
                 <TextField placeholder="Password" type="password" /><br></br>
-                <Button>Login</Button>
+                <Button form="loginForm">Login</Button>
               </form>
               <span className="text-xs">The data held on this system is private property. Access to the data is only available for authorised users and authorised purposes. Unauthorised etry contravenes the Computer Misuse Act 1990 and may incur criminal penalties as well as adamages.</span>
               <span className="text-xs text-center">© Empowering Energy Solutions Ltd 2022</span>
