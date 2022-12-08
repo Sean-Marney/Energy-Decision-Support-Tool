@@ -18,6 +18,48 @@ export default async function handler(req, res) {
         orgName,
       },
     });
+    try{
+      await prisma.targets.createMany({
+        data: [
+          {
+            name: "cost",
+            timeframe: "weekly",
+            value: 0,
+            organisation: orgName
+          }, {
+            name: "energy",
+            timeframe: "weekly",
+            value: 0,
+            organisation: orgName
+          }, {
+            name: "carbon",
+            timeframe: "weekly",
+            value: 0,
+            organisation: orgName
+          },
+          {
+            name: "cost",
+            timeframe: "monthly",
+            value: 0,
+            organisation: orgName
+          }, {
+            name: "energy",
+            timeframe: "monthly",
+            value: 0,
+            organisation: orgName
+          }, {
+            name: "carbon",
+            timeframe: "monthly",
+            value: 0,
+            organisation: orgName
+          }
+        ]
+      })      
+    }catch(error){
+      console.log(error)
+    }
+
+
     res.status(200).json({ message: "Organisation created" });
   } else {
     res.status(500).json({ message: "HTTP method must be POST" });
