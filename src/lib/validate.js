@@ -61,3 +61,25 @@ export function registerOrgValidate(values) {
 
   return errors;
 }
+
+export function createOptimisationValidate(values) {
+  const errors = {};
+
+  if (!values.title) {
+    errors.title = "Required";
+  }
+
+  if (!values.body) {
+    errors.body = "Required";
+  }
+
+  if (!values.priority) {
+    errors.priority = "Required";
+  }
+
+  if (!values.archived) {
+    errors.archived = "Required";
+  }
+
+  return errors;
+}

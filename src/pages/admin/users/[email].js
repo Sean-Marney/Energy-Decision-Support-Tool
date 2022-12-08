@@ -20,7 +20,7 @@ export default function User({ getUsers }) {
   });
 
   return (
-    <div>
+    <div className="text-center">
       <h1>
         User profile for <b>{email}</b>
       </h1>
@@ -45,52 +45,14 @@ export default function User({ getUsers }) {
   );
 }
 
-// Protects route
-export async function getServerSideProps({ req }) {
-  const session = await getSession({ req });
+import authorityCheck from "/services/authorityCheck";
 
+export async function getServerSideProps({ req }) {
   // Get all users from database
   const getUsers = await prisma.user.findMany();
 
-  // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
-  // TODO - Only have one instance of 'get user' code to reduce repeated code
-  try {
-    const user = await prisma.user.findFirst({
-      where: {
-        email: session.user.email,
-      },
-    });
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/home",
-        permanent: false,
-      },
-    };
-  }
+  var props = await authorityCheck(await getSession({ req }), ["admin"]);
+  props["props"]["getUsers"] = await prisma.user.findMany({});
 
-  // Gets current user
-  const user = await prisma.user.findFirst({
-    where: {
-      email: session.user.email,
-    },
-  });
-
-  // If a non-admin tries to access register page, redirect them to dashboard (if they don't have access to dashboard, they are redirected to homepage)
-  if (user.role !== "admin") {
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permanent: false,
-      },
-    };
-    // If admin, show page
-  } else {
-    return {
-      props: {
-        session,
-        getUsers,
-      },
-    };
-  }
+  return props;
 }
