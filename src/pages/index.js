@@ -5,7 +5,7 @@ export default function Home() {}
 
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
-
+  console.log(session);
   try {
     const user = await prisma.user.findFirst({
       where: {
@@ -13,6 +13,7 @@ export async function getServerSideProps({ req }) {
       },
     });
   } catch (error) {
+    console.log("THROW ERROR");
     return {
       redirect: {
         destination: "/home",
@@ -36,7 +37,6 @@ export async function getServerSideProps({ req }) {
       },
     };
   }
-
   // If manager, load dashboard
   if (session && user.role === "manager") {
     return {
