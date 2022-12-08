@@ -60,6 +60,7 @@ export async function getServerSideProps({ req }) {
     let archivedOptimisations = await readArchivedOptimisations(organisationID);
     // If admin or manager, show page
     let data = [optimisations, archivedOptimisations]
+    console.log(data);
     return {
       props: {session , data}
     };

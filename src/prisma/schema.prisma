@@ -33,17 +33,17 @@ model User {
   // organisationId Int
 }
 
-
 model Optimisations {
-  id     Int     @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   organisation String
-  priority     String 
-  title     String 
-  body     String    
-  archived  Boolean     
+  priority     String
+  title        String
+  body         String
+  archived     String
 }
+
 model Targets {
-  id     Int     @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   organisation String
   name     String 
   value     Int 

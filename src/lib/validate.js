@@ -61,11 +61,25 @@ export function registerOrgValidate(values) {
 
   return errors;
 }
-// export function targetsValidate(values){
-//   const errors = {};
-//   if (values.energy.length < 1 || values.energy.length > 7) {
-//     errors.password =
-//       "Energy Consumption must be greater than 1 characters and less than 7 characters";
-// }
-  
-// }
+
+export function createOptimisationValidate(values) {
+  const errors = {};
+
+  if (!values.title) {
+    errors.title = "Required";
+  }
+
+  if (!values.body) {
+    errors.body = "Required";
+  }
+
+  if (!values.priority) {
+    errors.priority = "Required";
+  }
+
+  if (!values.archived) {
+    errors.archived = "Required";
+  }
+
+  return errors;
+}
