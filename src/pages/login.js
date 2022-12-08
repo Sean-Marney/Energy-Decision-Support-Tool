@@ -19,24 +19,31 @@ export default function Login() {
   const router = useRouter();
 
   var [email, setEmail] = useState("");
+  var [password, setPassword] = useState("");
 
-  async function onSubmit(values) {
-    console.log("RIUN")
+  async function onSubmit(e) {
+    e.preventDefault();
 
-    const submitStatus = await signIn("credentials", {
+    signIn("credentials", {
       redirect: false,
-      email: "",
-      password: "",
-      callbackUrl: "/",
-    });
+      email: email,
+      password: password
+    }).then((res) => {
+      if (res.ok) {
+        router.push("/dashboard");
+      }else{
+        switch(res.error){
+          case "CredentialsSignin":
+            toast.error("Invalid credentials provided");
+            break;
+          default:
+            toast.error("Error logging in");
+        }
+      }
 
-    if (submitStatus.ok) {
-      router.push(submitStatus.url);
-    }
-
-    if (submitStatus.error) {
-      toast.error("Invalid credentials provided");
-    }
+    }).catch((err) => {
+      toast.error("Error logging in");
+    })
   }
 
   return (
@@ -58,10 +65,11 @@ export default function Login() {
             </div>
 
               <form className="flex flex-col gap-5" id="loginForm">
-                <TextField placeholder="Email" type="email" value={email} /><br></br>
-                <TextField placeholder="Password" type="password" /><br></br>
-                <Button form="loginForm">Login</Button>
+                <TextField placeholder="Email" type="email" value={email} onChange={setEmail} /><br></br>
+                <TextField placeholder="Password" type="password" value={password} onChange={setPassword} /><br></br>
+                <Button form="loginForm" onClick={ onSubmit }>Login</Button>
               </form>
+              
               <span className="text-xs">The data held on this system is private property. Access to the data is only available for authorised users and authorised purposes. Unauthorised etry contravenes the Computer Misuse Act 1990 and may incur criminal penalties as well as adamages.</span>
               <span className="text-xs text-center">© Empowering Energy Solutions Ltd 2022</span>
           </section>
