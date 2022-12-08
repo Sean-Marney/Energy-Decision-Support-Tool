@@ -4,6 +4,7 @@ import { readArchivedOptimisations, readUnArchivedOptimisations }  from '../lib/
 import { Optimisation } from "../components/Optimisation";
 import { ArchivedOptimisation } from "../components/ArchivedOptimisation";
 import { ArchivedList } from "../components/ArchivedList";
+import Optimisations from "../pages/optimisations";
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 
@@ -34,4 +35,11 @@ test('Archived Optimisation List',() => {
     render(<ArchivedList list={[]}/>)
     const title = screen.getByText("Archived Items");
     expect(title).toBeInTheDocument();        
+})
+test('Working All Together',() => { 
+    render(<Optimisations data={[[{"id": 1,"organisation": 'Cardiff University',"priority": '3',"title": 'Reduce number of computers',"body": 'Reduces electricity consumption and cost',"archived": false}],[{ "id": 3, "title": 'Install solar panels', "priority": '1' },{ "id": 4, "title": 'Turn off lights', "priority": '1' }]]}/>);    
+    const optimisation1 = screen.getByText("Reduce number of computers");
+    const optimisation2 = screen.getByText("Install solar panels");
+    expect(optimisation1).toBeInTheDocument();
+    expect(optimisation2).toBeInTheDocument();    
 })
