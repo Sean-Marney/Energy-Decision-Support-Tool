@@ -47,9 +47,11 @@ model Optimisations {
 }
 
 model Targets {
-  id           Int    @id @default(autoincrement())
-  organisation String
-  name     String 
-  value     Int 
-  timeframe     String        
+  id             Int           @id @default(autoincrement())
+  organisation   String
+  name           String
+  value          Int
+  timeframe      String
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId Int?
 }
