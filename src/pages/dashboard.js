@@ -8,8 +8,11 @@ import { readUnArchivedOptimisations } from "../lib/database_functions";
 import { KPIContainer } from "../components/KPIContainer";
 import { RedLine } from "../components/RedLine";
 import { router } from "next/router";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-export default function Dashboard({ data }) {
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
+import Session from '../scripts/session';
+
+export default function Dashboard({data}) {
   function handleSignOut() {
     signOut();
   }
@@ -142,7 +145,12 @@ export default function Dashboard({ data }) {
 }
 
 // Protects route
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps(context) {
+  const session = await (new Session()).getSession(context)
+  console.log("SESSION")
+  console.log(session)
+  //const session = await getSession({ req });
+
   // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
   // TODO - Only have one instance of 'get user' code to reduce repeated code
   const session = await getSession({ req });
@@ -163,6 +171,7 @@ export async function getServerSideProps({ req }) {
       },
     };
   }
+  console.log("HERE WE ARE")
   // Reads optimisations from the database
   let optimisations = await readUnArchivedOptimisations(organisationID);
   let number = optimisations.length;
