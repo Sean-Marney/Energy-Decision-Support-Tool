@@ -1,21 +1,31 @@
 import NextAuth from "next-auth/next";
-import { compare } from "bcrypt";
+import {
+  compare
+} from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { prisma } from "../../../lib/prisma";
+import {
+  prisma
+} from "../../../lib/prisma";
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials, req) {
-        const result = await prisma.user.findFirst({
-          where: {
-            email: credentials.email,
-          },
-        });
+        var result = null
+        try {
+          result = await prisma.user.findFirst({
+            where: {
+              email: credentials.email,
+            },
+          })
+        } catch (e) {
+          console.error(e)
+          return null
+        }
 
         if (!result) {
-          throw new Error("User not found with provided email");
+          return null
         }
 
         const checkPassword = await compare(
@@ -24,11 +34,12 @@ export default NextAuth({
         );
 
         if (!checkPassword || result.email !== credentials.email) {
-          throw new Error("Email or password doesn't match");
+          throw new Error("Email or password doesn't match")
         }
-
-        return result;
+        return result
       },
     }),
   ],
-});
+}
+
+export default NextAuth(authOptions);
