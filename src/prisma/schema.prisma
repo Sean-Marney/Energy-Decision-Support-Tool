@@ -11,19 +11,21 @@ datasource db {
   url      = "mysql://root:COMSC@localhost:3306/deorsum"
 }
 
-// npm i --save-dev prisma typescript ts-node @types/node nodemon
-// npm i @prisma/client
-// npx prisma migrate dev --name init    <-- Syncs schema with database
-// npm run devStart
-
-// TODO: Needs to be restructured to a one to many relationship rather than having organisation as a string
+model Site {
+  id             Int          @id @default(autoincrement())
+  name           String
+  organisationID Int
+  organisation   Organisation @relation(fields: [organisationID], references: [id])
+  Target         Target[]
+}
 
 model Organisation {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
   User          User[]
-  Optimisations Optimisations[]
-  Targets       Targets[]
+  Optimisations Optimisation[]
+  Targets       Target[]
+  Site          Site[]
 }
 
 model User {
@@ -36,7 +38,7 @@ model User {
   organisation   Organisation @relation(fields: [organisationID], references: [id])
 }
 
-model Optimisations {
+model Optimisation {
   id             Int          @id @default(autoincrement())
   organisation   Organisation @relation(fields: [organisationID], references: [id])
   organisationID Int
@@ -46,12 +48,14 @@ model Optimisations {
   archived       Boolean
 }
 
-model Targets {
+model Target {
   id             Int           @id @default(autoincrement())
-  organisation   String
+  title          String
   name           String
   value          Int
   timeframe      String
-  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
-  organisationId Int?
+  Site           Site?         @relation(fields: [siteID], references: [id])
+  siteID         Int?
+  organisation   Organisation? @relation(fields: [organisationID], references: [id])
+  organisationID Int?
 }
