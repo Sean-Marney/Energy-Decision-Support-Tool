@@ -17,6 +17,7 @@ export default function SideBar() {
             <SideBarItem name="Bill Validation" icon="TbReceipt" path="/bill-validation" />
         </nav>
         <hr></hr>
+
     </>
   );
 }

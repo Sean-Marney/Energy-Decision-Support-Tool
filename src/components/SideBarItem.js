@@ -17,16 +17,14 @@ export default function SideBarItem({ name, icon, path }) {
 
   return (
 
-            <Link href={ path }><section className="my-5">
-                <a className="text-white text-2xl inline">
+    <div className="text-white text-2xl inline my-5"><Link href={ path }><section className="text-white text-2xl inline">
                     <span className="inline-block text-4xl align-middle mr-4">
                         <IconRender />
                     </span>
                     <span>
                         {name}
                     </span>
-                </a>
-            </section></Link>
+            </section></Link></div>
 
   );
 }

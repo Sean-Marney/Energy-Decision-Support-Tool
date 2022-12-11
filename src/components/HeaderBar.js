@@ -26,7 +26,7 @@ export default function HeaderBar({children}) {
   }
 
   React.useEffect(() => {
-    setOrganisation(15)
+    setOrganisation(1)
     setSite(1)
   }, [])
 
@@ -44,7 +44,7 @@ export default function HeaderBar({children}) {
                 <option>Cardiff University</option>
               </select>
               <select type="text" className="ml-4 text-2xl border-2 bg-white px-2" value={ site } onChange={ (e) => {setSite(e.target.value)} }>
-                <option>Abacws Buildiing</option>
+                <option>Abacws Building</option>
               </select>
             </div>
           </div>

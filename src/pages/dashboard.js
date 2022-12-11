@@ -11,14 +11,6 @@ import { KPIData } from "../components/KPIData";
 import Image from "next/image";
 
 export default function Dashboard() {
-  function handleSignOut() {
-    signOut();
-  }
-
-  function selectOptimisations() {
-    router.push("http://localhost:3000/optimisations");
-  }
-
   function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);

@@ -12,11 +12,12 @@ datasource db {
 }
 
 model Site {
-  id             Int          @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   name           String
   organisationID Int
-  organisation   Organisation @relation(fields: [organisationID], references: [id])
+  organisation   Organisation   @relation(fields: [organisationID], references: [id])
   Target         Target[]
+  Optimisation   Optimisation[]
 }
 
 model Organisation {
@@ -42,6 +43,8 @@ model Optimisation {
   id             Int          @id @default(autoincrement())
   organisation   Organisation @relation(fields: [organisationID], references: [id])
   organisationID Int
+  site           Site         @relation(fields: [siteID], references: [id])
+  siteID         Int
   priority       String
   title          String
   body           String

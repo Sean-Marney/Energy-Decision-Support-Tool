@@ -1,7 +1,8 @@
-import archive from "public/archive.svg"
+
 import React from 'react';
 import Image from 'next/image'
-import { ArchivedOptimisation }  from '../components/ArchivedOptimisation';
+import { ArchivedOptimisation }  from './ArchivedOptimisation';
+
 export class ArchivedList extends React.Component{
     constructor(props) {
         super(props);
