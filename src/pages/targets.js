@@ -40,11 +40,21 @@ export default function Targets({data}) {
     })
   }
 
+  function setData(){
+    fetch('http://localhost:3000/api/target?site=' + getCookie("site"), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(targetsData)
+    })
+  }
+
   function modificationFunction(index, value){
-    alert(value)
     let temp = targetsData
     temp[index].value = value
     setTargetsData(temp)
+    setData(temp)
   }
 
   React.useEffect(() => {

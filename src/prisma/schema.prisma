@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider = "mysql"
   //url      = env("DATABASE_URL")
-  url      = "mysql://root:comsc@localhost:3306/energydss_db"
+  url      = "mysql://root:COMSC@localhost:3306/energydss_db"
 }
 
 model Site {
@@ -21,12 +21,10 @@ model Site {
 }
 
 model Organisation {
-  id            Int            @id @default(autoincrement())
-  name          String         @unique
-  User          User[]
-  Optimisations Optimisation[]
-  Targets       Target[]
-  Site          Site[]
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  User User[]
+  Site Site[]
 }
 
 model User {
@@ -40,26 +38,22 @@ model User {
 }
 
 model Optimisation {
-  id             Int          @id @default(autoincrement())
-  organisation   Organisation @relation(fields: [organisationID], references: [id])
-  organisationID Int
-  site           Site         @relation(fields: [siteID], references: [id])
-  siteID         Int
-  priority       String
-  title          String
-  body           String
-  action         String
-  archived       Boolean
+  id       Int     @id @default(autoincrement())
+  site     Site    @relation(fields: [siteID], references: [id])
+  siteID   Int
+  priority String
+  title    String
+  body     String
+  action   String
+  archived Boolean
 }
 
 model Target {
-  id             Int           @id @default(autoincrement())
-  title          String
-  name           String
-  value          Int
-  timeframe      String
-  Site           Site?         @relation(fields: [siteID], references: [id])
-  siteID         Int?
-  organisation   Organisation? @relation(fields: [organisationID], references: [id])
-  organisationID Int?
+  id        Int    @id @default(autoincrement())
+  title     String
+  name      String
+  value     Int
+  timeframe String
+  Site      Site?  @relation(fields: [siteID], references: [id])
+  siteID    Int?
 }
