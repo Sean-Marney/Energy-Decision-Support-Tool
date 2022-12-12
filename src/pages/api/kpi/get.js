@@ -19,7 +19,7 @@ export default async function handler(req, res) {
             id: parseInt(organisationID)
         }
     })
-
+    
     if(!organisation){
         res.status(400).json({error: "Organisation not found"})
     }
