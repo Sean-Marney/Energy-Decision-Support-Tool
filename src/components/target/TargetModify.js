@@ -30,7 +30,8 @@ export default function TargetModify({ title, value:initialValue, name, key, ind
                 <label for={ "target-input-" + key }>{ title }</label>
                 <div className="flex flex-row items-center">
                     <h2 className="text-7xl inline">{ prefix }</h2>
-                    <input type="text" className="text-7xl inline w-40 border-4 px-2" id={ "target-input-" + key } value={ value } onChange={ (e) => { setTargetValue(e.target.value) } }></input>
+                    <input type="text" className="text-7xl inline w-40 border-4 px-2" id={ "target-input-" + key } value={ value } onChange={ (e) => {setValue(e.target.value)
+                    modificationFunction(index, e.target.value) } }></input>
                     <h2 className="text-7xl inline">{ postfix }</h2>
                 </div>
             </div>

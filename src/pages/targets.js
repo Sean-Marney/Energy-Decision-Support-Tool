@@ -52,21 +52,21 @@ export default function Targets({ data }) {
     })
   }
 
-  function uploadTargetsData(targets){
-    fetch('/api/target?site=' + getCookie("site"), {
+  function setData(){
+    fetch('http://localhost:3000/api/target?site=' + getCookie("site"), {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(targets)
+      body: JSON.stringify(targetsData)
     })
   }
 
-  function modificationFunction(index, value) {
+  function modificationFunction(index, value){
     let temp = targetsData
     temp[index].value = value
     setTargetsData(temp)
-    uploadTargetsData(temp)
+    setData(temp)
   }
 
   React.useEffect(() => {
