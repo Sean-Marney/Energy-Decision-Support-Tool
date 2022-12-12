@@ -37,11 +37,14 @@ function orderRecentFiles(dir){
   }
 }
 
-function readEnergyData(content){
-  let numberOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
-    // Gathers all the relevant energy data for the last week and last month from the csv file 
-    // Collecting the energy consumption, energy cost and carbon emissions
-  let monthlyUsage = 0,monthlyCost = 0,weeklyUsage = 0,weeklyCost = 0;
+function readEnergyData(content) {
+  let numberOfDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  // Gathers all the relevant energy data for the last week and last month from the csv file 
+  // Collecting the energy consumption, energy cost and carbon emissions
+  let monthlyUsage = 0,
+    monthlyCost = 0,
+    weeklyUsage = 0,
+    weeklyCost = 0;
   // Iterates through the last month and weeks data
   let date = (content[content.length-2])[0];
   let month = date.substring(5,7);
@@ -50,8 +53,8 @@ function readEnergyData(content){
     numberOfDays = 30 
   }else{
     let year = date.substring(6, 10);
-    numberOfDays = numberOfDaysInMonth[parseInt(month) -1];
-    if (parseInt(month)==2 && parseInt(year) % 4){
+    numberOfDays = numberOfDaysInMonth[parseInt(month) - 1];
+    if (parseInt(month) == 2 && parseInt(year) % 4) {
       numberOfDays = 29;
     }
   }

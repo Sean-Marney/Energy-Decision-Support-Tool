@@ -1,0 +1,36 @@
+.afterline:after {
+    content: "";
+    display: block;
+    margin: .625rem 0 0;
+    width: 25px;
+    height: 5px;
+    background-color: #d4374a;
+}
+
+* {
+    font-family: "FranklinGothicBook" !important;
+}
+
+#sidebar-nav {
+    color: #FFFFFF !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "FranklinGothicMed" !important;
+    color: #383735;
+}
+
+@font-face {
+    font-family: "FranklinGothicMed";
+    src: url('https://d3q5dbq2rziek.cloudfront.net/3.4.4/webfonts/FranklinGothic-Med.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: "FranklinGothicBook";
+    src: url('https://d3q5dbq2rziek.cloudfront.net/3.4.4/webfonts/FranklinGothic-Book.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: "FranklinGothicDemi";
+    src: url('https://d3q5dbq2rziek.cloudfront.net/3.4.4/webfonts/FranklinGothic-Demi.woff2') format('woff2');
+}

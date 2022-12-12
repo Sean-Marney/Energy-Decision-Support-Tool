@@ -7,53 +7,59 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
-// npm i --save-dev prisma typescript ts-node @types/node nodemon
-// npm i @prisma/client
-// npx prisma migrate dev --name init    <-- Syncs schema with database
-// npm run devStart
-
-// TODO: Needs to be restructured to a one to many relationship rather than having organisation as a string
-
-model Organisation {
-  id      Int    @id @default(autoincrement())
-  orgName String @unique
-  // users   User[] // not stored
+  //url      = env("DATABASE_URL")
+  url      = "mysql://root:COMSC@localhost:3306/energydss_db"
 }
 
 model Site {
-  id           Int    @id @default(autoincrement())
-  name        String
-  organisation String
-  // organisation   Organisation @relation(fields: [organisationId], references: [id]) // not stored
-  // organisationId Int
+  id             Int            @id @default(autoincrement())
+  name           String
+  organisationID Int
+  organisation   Organisation   @relation(fields: [organisationID], references: [id])
+  Target         Target[]
+  Optimisation   Optimisation[]
+}
+
+model Organisation {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  User          User[]
+  Optimisations Optimisation[]
+  Targets       Target[]
+  Site          Site[]
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
-  email        String @unique
-  password     String
-  role         String
-  organisation String
-  // organisation   Organisation @relation(fields: [organisationId], references: [id]) // not stored
-  // organisationId Int
+  id             Int          @id @default(autoincrement())
+  name           String
+  email          String       @unique
+  password       String
+  role           String
+  organisationID Int
+  organisation   Organisation @relation(fields: [organisationID], references: [id])
 }
 
-
-model Optimisations {
-  id     Int     @id @default(autoincrement())
-  organisation String
-  priority     String 
-  title     String 
-  body     String    
-  archived  Boolean     
+model Optimisation {
+  id             Int          @id @default(autoincrement())
+  organisation   Organisation @relation(fields: [organisationID], references: [id])
+  organisationID Int
+  site           Site         @relation(fields: [siteID], references: [id])
+  siteID         Int
+  priority       String
+  title          String
+  body           String
+  action         String
+  archived       Boolean
 }
-model Targets {
-  id     Int     @id @default(autoincrement())
-  organisation String
-  name     String 
-  value     String 
-  timeframe     String        
+
+model Target {
+  id             Int           @id @default(autoincrement())
+  title          String
+  name           String
+  value          Int
+  timeframe      String
+  Site           Site?         @relation(fields: [siteID], references: [id])
+  siteID         Int?
+  organisation   Organisation? @relation(fields: [organisationID], references: [id])
+  organisationID Int?
 }

@@ -1,164 +1,126 @@
 import { signOut } from "next-auth/react";
-import { getSession } from "next-auth/react";
-import Image from 'next/image'
+
 import * as React from "react";
-import { calculateEnergyData } from '../lib/csv';
-import { readTargets } from '../lib/database_functions';
-import { readUnArchivedOptimisations } from '../lib/database_functions';
-import { KPIContainer }  from '../components/KPIContainer';
-import { RedLine } from '../components/RedLine';
+
 import { router } from "next/router";
-import { readSites } from "../lib/database_functions";
-import { getUsers } from "../service/getUsers";
 
-export default function Dashboard({data}) {
-  function handleSignOut() {
-    signOut();
+import Card from "components/ui/Card"
+import { KPIContainer } from "components/KPIContainer"
+import { KPIData } from "../components/KPIData";
+
+import Image from "next/image";
+
+export default function Dashboard() {
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+       c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
   }
 
-  function selectOptimisations(){
-    router.push("http://localhost:3000/optimisations");
+  const [kpiData, setKpiData] = React.useState(null)
+
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isDownloading, setIsDownloading] = React.useState(true)
+
+  function getData(){
+    fetch('http://localhost:3000/api/kpi/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation")).then(async (response) => {
+      setKpiData(await response.json())
+      setIsDownloading(false)
+    })
   }
+
+  React.useEffect(() => {
+    if(!isLoaded){
+      getData()
+      setIsLoaded(true)
+    }
+  }, [])
 
   return (
-    <div>
-      <main>
-        <div className="flex flex-row">
-{/* KPI Data section */}
-          <div className="basis-2/5 border-2 m-4 shadow">
-            <KPIContainer title="Site KPIs last week" data = {data.weeklyData} target = {data.weeklyTarget}/>    
+    <>
+      { !isDownloading &&  <div className="grid grid-cols-11 gap-5 m-8 transition-opacity ease-in duration-700 w-full">
+        { /* KPIs */ }
+        
+          
+          <div className="col-span-4">
+            <Card loading={isDownloading}>
+              <KPIContainer title="Site KPIs Last Week">
+                <KPIData data={ kpiData.actual.weekly.usage } targetComparison={ kpiData.targets.weekly.usage || 0 } units="kW"/>
+                <KPIData data={ kpiData.actual.weekly.cost } targetComparison={ kpiData.targets.weekly.cost || 0} units="£"/>
+                <KPIData data={ kpiData.actual.weekly.carbonEmissions } targetComparison={ kpiData.targets.weekly.carbonEmissions || 0 } units="tCO₂e"/>
+              </KPIContainer>
+            </Card>
           </div>
-          <div className="basis-2/5 border-2 m-4 shadow">
-            <KPIContainer title="Site KPIs last month" data = {data.monthlyData} target = {data.monthlyTarget}/>    
+          <div className="col-span-4">
+            <Card loading={isDownloading}>
+              <KPIContainer title="Site KPIs Last Month">
+              <KPIData data={ kpiData.actual.monthly.usage } targetComparison={ kpiData.targets.monthly.usage || 0 } units="kW"/>
+                <KPIData data={ kpiData.actual.monthly.cost } targetComparison={ kpiData.targets.monthly.cost || 0} units="£"/>
+                <KPIData data={ kpiData.actual.monthly.carbonEmissions } targetComparison={ kpiData.targets.monthly.carbonEmissions || 0 } units="tCO₂e"/>
+              </KPIContainer>
+            </Card>
           </div>
-{/* Optimisations section */}
-          <div className="basis-1/5 border-2 m-4 shadow cursor-pointer" onClick={selectOptimisations}>
-            <div className = "flex flex-col">
-                <h3 className="text-xl text-left">Pending optimisations</h3>
-                <RedLine />
-              <div className="flex flex-row">
-                <div className="basis-1/3 h-full">
-                  <br/>
-                  <br/>
-                  <h3 className="text-5xl font-bold">{data[2]}</h3>
-                </div>                
-                <div className="basis-2/3">
-                  <Image
-                    src="/images/lightbulb.svg"
-                    height={144}
-                    width={144}
-                    alt="Optimisations"
-                  />
-                </div>  
+    
+      { /* Optimisations */ }
+        <div className="col-span-3">
+          <Card loading={isDownloading}>
+            <div className="flex flex-col">
+              <h1 className="text-5xl afterline">Pending optimisations</h1>
+              <div className="flex mt-6 justify-center items-center">
+                <h1 className="text-8xl">4</h1>
+                <img src="/images/lightbulb.svg" alt="Optimisations" style={{ filter: "invert(0.2)" }} className="ml-6 h-32" />
               </div>
-              <div>
-                <div className='bg-cyan-200	 m-1 flex flex-row'>
-                  <div className = "basis-1/4">
-                    <br/>
-                    <Image
-                      src="/images/info.svg"
-                      height={49}
-                      width={49}
-                      alt="Optimisations"
-                    />
+              <div className="flex mt-6 mx-4 p-2 rounded bg-blue justify-center bg-[#B3DDEA] items-center">
+                <img src="/images/info.svg" alt="Info" style={{ filter: "invert(0.2)" }} className="h-12 px-2" />
+                <p>The earlier you action your optimisations, the more effective they will be. <u>Click here</u> to visit your Optimisations tab now.</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+      { /* Insights */ }
+        <div className="col-span-11">
+          <Card loading={isDownloading}>
+            <div className="flex flex-col">
+              <h1 className="text-5xl afterline mb-6">Insights</h1>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="col-span-1">
+                  <div className="flex flex-row">
+                    <img src="/images/snow.svg" alt="Insights" style={{ filter: "invert(0.2)" }} className="object-contain mr-4" />
+                    <div>
+                      <h2 className="text-3xl mb-2">Prepare for winter</h2>
+                      <p>In light of recent news, National Grid is urging businesses to consume less power over the winter period. Check your Optimisations today and invest early to minimise spending increase.</p>
+                    </div>
                   </div>
-   <div className='basis-3/4'>
-                    <p className='text-xs	'>The earlier you action your optimisations, the more effective they will be.
-  Click here to visit your Optimisations tab now.</p>
+                </div>
+
+                <div className="col-span-1">
+                  <div className="flex flex-row">
+                    <img src="/images/snow.svg" alt="Insights" style={{ filter: "invert(0.2)" }} className="object-contain mr-4" />
+                    <div>
+                      <h2 className="text-3xl mb-2">Energy Price Guarantee</h2>
+                      <p>A new six-month scheme for businesses and other non-domestic energy users (including charities and public sector organisations like schools) will offer equivalent support as it being provided for consumers. This will protect you from soaring energy costs and provide better insights. As always, unit price changes will be taken into account when calculating your <u>Optimisations</u>. For more information, visit <u>gov.uk</u>.</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div> 
-{/* Code for insights if we wanted to add them to the page */}
-        <div className='border-2 m-4 shadow'>
-        <h3 className="text-3xl">Insights</h3>
-        <div className="flex flex-row">
-        <div className="basis-1/2">
-            <div className='flex flex-row'>
-              <div className = "basis-1/4">
-                <br/>
-                <Image
-                src="/images/snow.svg"
-                height={49}
-                width={49}
-                alt="Prepare for winter"
-                />
-              </div>
-              <div className='basis-3/4'>
-                <p className='text-sm	'>In light of recent news, National Grid is urging businesses to consume less power over the winter period. Check your Optimisations today and invest early to minimise spending increase.</p>
-              </div>
-            </div>
-          </div>
-          <div className="basis-1/2">
-            <div className='flex flex-row'>
-              <div className = "basis-1/4">
-                <br/>
-                <Image
-                src="/images/pound.svg"
-                height={49}
-                width={49}
-                alt="Energy Price Guarantee"
-                />
-              </div>
-              <div className='basis-3/4'>
-                <p className='text-sm	'>A new six-month scheme for businesses and other non-domestic energy users (including charities and public sector organisations like schools) will offer equivalent support as is being provided for consumers. This will protect you from soaring energy costs and provide better insights.
-As always, unit price changes will be taken into account when calculating your Optimisations.
-For more information, visit gov.uk.</p>
-              </div>
-            </div>
-          </div>
-        </div>  
-        </div>  
-      </main>
-      <div className="flex justify-center">
+          </Card>
+        </div>
+
       </div>
-
-    </div>
+      }
+      
+    </>
   );
-}
-
-// Protects route
-export async function getServerSideProps({ req }) {
-  const session = await getSession({ req });
-
-  // Code to ensure if user no longer has their session cookies (ie. is now logged out), they will be returned home - this prevents null user error
-  // TODO - Only have one instance of 'get user' code to reduce repeated code
-  let user = await getUsers(session);
-  if (user.role == "admin" || user.role == "manager") {
-    let organisationID = user.organisation;
-    // Reads optimisations from the database
-    let optimisations = await readUnArchivedOptimisations(organisationID);
-    let number = optimisations.length
-    let siteID;
-
-    // Retrieve the selected site
-    // To be completed in future sprint
-    let sites = await readSites(organisationID);
-    if (sites.length > 0){
-      siteID = sites[0].name;
-    }else{
-      siteID = "general";
-    }
-    // Reads the energy data from the CSV File
-    const data = await calculateEnergyData(organisationID, siteID);
-    // Sends all the data to the page
-    data[2] = number;
-    // Reads the weekly and monthly targets for energy, cost and carbon for the organisation from the database
-    let targetData=await readTargets(organisationID);
-    data["weeklyTarget"] = targetData[0];
-    data["monthlyTarget"] = targetData[1];
-    // If admin or manager, show page
-    return {
-      props: {session , data}
-    };
-  }else{
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }  
 }
