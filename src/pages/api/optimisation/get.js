@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { prisma } from "../../../lib/prisma";
 
 export default async function handler(req, res) {
     if(!Object.keys(req.query).includes("organisation") || !Object.keys(req.query).includes("site")){

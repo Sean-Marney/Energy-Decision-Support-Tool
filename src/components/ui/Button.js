@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 
 export class Button extends React.Component {
     constructor(props) {
@@ -8,7 +9,7 @@ export class Button extends React.Component {
     render() {
         return (
         <button
-            className="bg-cardiff-blue text-white font-bold py-3 px-4 text-2xl" onClick={this.props.onClick}
+            className={ classNames("bg-cardiff-blue text-white font-bold py-3 px-4 text-2xl", this.props.style) } onClick={this.props.onClick}
         >
             {this.props.children}
         </button>

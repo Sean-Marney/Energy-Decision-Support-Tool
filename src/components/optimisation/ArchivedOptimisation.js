@@ -3,6 +3,13 @@ import React from "react";
 import Image from "next/image";
 import { router } from "next/router";
 
+import Card from "components/ui/Card";
+
+import classNames from "classnames";
+
+import { FaTrashRestoreAlt } from "react-icons/fa";
+
+
 export class ArchivedOptimisation extends React.Component {
   constructor(props) {
     super(props);
@@ -11,41 +18,39 @@ export class ArchivedOptimisation extends React.Component {
   }
   //   Handles unarchive the optimisation by calling api which modifies the database and then reloads the page
   async handleUnarchive() {
-    let values = { id: this.props.optimisation.id, value: "1" };
+    let values = { id: this.props.optimisation.id, value: false };
     const submit = {
-      method: "POST",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     };
-    await fetch("http://localhost:3000/api/toggleArchive", submit);
-    router.push("http://localhost:3000/optimisations");
+    await fetch("/api/optimisation/" + this.props.optimisation.id + "/archive", submit)
+    this.props.refreshMethod()
   }
+
   render() {
     // Sets the background colour depending on the priority of the optimisation
     let colour;
-    if (this.props.optimisation.priority == "3") {
-      colour = "basis-1/6 bg-green-600 w-1 h-9 rounded-sm";
-    } else if (this.props.optimisation.priority == "2") {
-      colour = "basis-1/6 bg-yellow-600 w-1 h-9 rounded-sm";
-    } else {
-      colour = "basis-1/6 bg-red-600 w-1 h-9 rounded-sm";
+    switch(this.props.optimisation.priority){
+      case "3":
+        colour = "bg-[#63A103]";
+        break;
+      case "2":
+        colour = "bg-[#F08A24]";
+        break;
+      default:
+        colour = "bg-[#D9001B]";
+        break;
     }
+
     return (
       // Shows the details of the archived optimisation
-      <div
-        className="border-slate-800/75 border-2 rounded-sm cursor-pointer h-12 w-60"
-        ref={this.showArchiveButton}
-        onClick={this.handleUnarchive}
-      >
-        <div className="flex flex-row m-1">
-          <div className={colour}>
-            <Image src={tips} height={36} width={36} alt="Tip" />
-          </div>
-          <div className="basis-5/6">
-            <p className="font-bold ml-2">{this.props.optimisation.title}</p>
-          </div>
-        </div>
-      </div>
+      <div onClick={this.handleUnarchive}>
+        <Card className="flex flex-row mb-4 px-4 py-4 items-center">
+        <img src="/images/tips.svg" className={classNames('p-1', 'mr-3', 'rounded', 'justify-center', 'w-8', colour)} />
+        <strong>{ this.props.optimisation.title }</strong>
+        <FaTrashRestoreAlt className="ml-auto" size="1.75rem" color="#383735" />
+      </Card></div>
     );
   }
 }

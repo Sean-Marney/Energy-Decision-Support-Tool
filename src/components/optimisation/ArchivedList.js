@@ -1,47 +1,31 @@
 
 import React from 'react';
-import Image from 'next/image'
 import { ArchivedOptimisation }  from './ArchivedOptimisation';
 
-export class ArchivedList extends React.Component{
-    constructor(props) {
-        super(props);
-        this.showArchiveButton = React.createRef();
-        this.showArchivedItems = this.showArchivedItems.bind(this);
-      }
-    // Toggles the Archived items being shown on the page  
-    showArchivedItems(){
-        if (this.showArchiveButton.current.style.visibility == "hidden"){
-            this.showArchiveButton.current.style.visibility = "visible";
-        }else{
-            this.showArchiveButton.current.style.visibility ="hidden";
-        }
-        
-    }  
-    render() {
+import { useState } from 'react';
+
+import { Button } from '../ui/Button';
+import Card from '../ui/Card';
+
+export default function ArchivedList(props){
+        const [showArchivedItems, setShowArchivedItems] = useState(false);
+
         // Maps the list to Archived optimisation
-        const listItems = this.props.list.map(optimisation => <ArchivedOptimisation key={'optimisation' + optimisation.id} optimisation = {optimisation}/>);
+        const listItems = props.list.map(optimisation => <ArchivedOptimisation key={'optimisation' + optimisation.id} optimisation = {optimisation} refreshMethod={props.refreshMethod} />);
         return (
-            <div>
-                {/* Title which allows you to select whether to view the archived items */}
-                <div className="flex flex-row bg-blue-950 w-60 object-right mt-2">
-                    <div className="basis-1/5">
-                        <Image
-                                src={archive}
-                                height={25}
-                                width={25}
-                                alt= "Archive"
-                        />
+            <>
+                <div onClick={() => setShowArchivedItems(!showArchivedItems)}><Button style="w-full">
+                    <div className="flex-row flex h-6 justify-center align-center items-center">
+                        <img className="mr-3 h-8" src="/images/archive.svg" />
+                        <strong>Archived items</strong>
                     </div>
-                    <div className="basis-4/5 cursor-pointer" onClick={this.showArchivedItems}>
-                        <h1 className="text-white text-left">Archived Items</h1>   
-                    </div>
-                </div>
+                </Button></div>
+
                 {/* Displays list of archived options here */}
-                <div id = "ArchivedList" className="border-2 shadow w-60" ref={this.showArchiveButton} style={{visibility:"hidden"}}>
-                {listItems}
-                </div> 
-            </div>               
+                { showArchivedItems && <Card className="px-4 py-4" inverseTransition="true">
+                    {listItems}
+                </Card> }
+            </>               
         );
-    }        
+       
 }

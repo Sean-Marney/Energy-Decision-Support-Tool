@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { router } from "next/router";
 
-import { Card } from "components/ui/Card"
+import Card from "components/ui/Card"
 import { KPIContainer } from "components/KPIContainer"
 import { KPIData } from "../components/KPIData";
 
@@ -53,7 +53,7 @@ export default function Dashboard() {
         
           
           <div className="col-span-4">
-            <Card>
+            <Card loading={isDownloading}>
               <KPIContainer title="Site KPIs Last Week">
                 <KPIData data={ kpiData.actual.weekly.usage } targetComparison={ kpiData.targets.weekly.usage || 0 } units="kW"/>
                 <KPIData data={ kpiData.actual.weekly.cost } targetComparison={ kpiData.targets.weekly.cost || 0} units="£"/>
@@ -62,7 +62,7 @@ export default function Dashboard() {
             </Card>
           </div>
           <div className="col-span-4">
-            <Card>
+            <Card loading={isDownloading}>
               <KPIContainer title="Site KPIs Last Month">
               <KPIData data={ kpiData.actual.monthly.usage } targetComparison={ kpiData.targets.monthly.usage || 0 } units="kW"/>
                 <KPIData data={ kpiData.actual.monthly.cost } targetComparison={ kpiData.targets.monthly.cost || 0} units="£"/>
@@ -73,7 +73,7 @@ export default function Dashboard() {
     
       { /* Optimisations */ }
         <div className="col-span-3">
-          <Card>
+          <Card loading={isDownloading}>
             <div className="flex flex-col">
               <h1 className="text-5xl afterline">Pending optimisations</h1>
               <div className="flex mt-6 justify-center items-center">
@@ -90,7 +90,7 @@ export default function Dashboard() {
 
       { /* Insights */ }
         <div className="col-span-11">
-          <Card>
+          <Card loading={isDownloading}>
             <div className="flex flex-col">
               <h1 className="text-5xl afterline mb-6">Insights</h1>
               <div className="grid grid-cols-2 gap-6">
