@@ -73,9 +73,11 @@ export default function HeaderBar({children}) {
     setOrganisation(newOrg.id);
     setSitesOption(newOrg.Site.map(site => <option value={site.id} id={site.name}>{site.name}</option>))
     setSite(newOrg.Site[0].id);
+    location.reload();
   }
   function handleSiteChange(value){
     setSite(value);
+    location.reload();
   }
 
   React.useEffect(() => {
