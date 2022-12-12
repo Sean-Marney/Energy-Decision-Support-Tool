@@ -20,7 +20,8 @@ export default function TargetDisplay({ title, value, name }){
         <>
             <div className="flex flex-col mb-12">
                 <label>{ title }</label>
-                <h2 className="text-7xl">{ prefix + value + postfix }</h2>
+                {/* Code from StackOverflow https://stackoverflow.com/a/71591804/3460683 */}
+                <h2 className="text-7xl">{ prefix + value.toString().replace(/\B(?!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + postfix }</h2>
             </div>
         </>
     )
