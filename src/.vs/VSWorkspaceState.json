@@ -1,8 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\components"
+    "\\pages",
+    "\\pages\\admin",
+    "\\pages\\admin\\organisations",
+    "\\pages\\admin\\organisations\\create-optimisation",
+    "\\pages\\admin\\organisations\\register",
+    "\\pages\\admin\\users",
+    "\\pages\\api",
+    "\\pages\\api\\auth",
+    "\\pages\\api\\flow"
   ],
-  "SelectedNode": "\\components\\RedLine.js",
+  "SelectedNode": "\\pages\\flow.js",
   "PreviewInSolutionExplorer": false
 }
