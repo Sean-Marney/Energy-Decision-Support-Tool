@@ -14,7 +14,7 @@ function readCSVFile(organisation) {
     return -1;
   }
 }
-function readForSankey(content) {
+function readForSankey(content, start, end) {
     let numberOfDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     // Gathers all the relevant energy data for the last week and last month from the csv file 
     // Collecting the energy consumption, energy cost and carbon emissions
@@ -37,7 +37,7 @@ function readForSankey(content) {
         }
     }
     console.log(numberOfDays)
-    for (let i = 1; i < numberOfDays*48; i++) {
+    for (let i = (start*48 +1); i < end*48; i++) {
         let energyData = content[i].split(",");
         CHP1 += (parseFloat(energyData[1]))
         CHP2 += (parseFloat(energyData[2]))
@@ -157,7 +157,7 @@ export function calculateEnergyUsage(organisation, start, end) {
         return data;
     }
 };
-export function calculateForSankey(organisation) {
+export function calculateForSankey(organisation, start, end) {
     // Opens the data file and reads the data from within
     let content = readCSVFile(organisation);
     if (content == -1) {
@@ -168,7 +168,7 @@ export function calculateForSankey(organisation) {
             "gridOut": 0
         }
     } else {
-        let data = readForSankey(content);
+        let data = readForSankey(content, start, end);
         return data;
     }
 };

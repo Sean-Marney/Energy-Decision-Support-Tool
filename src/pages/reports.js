@@ -110,7 +110,6 @@ export default function Reports() {
     const [endDate, setEndDate] = useState(null);
     const [startNum, setStartNum] = useState(0);
     const [endNum, setEndNum] = useState(0);
-    const [testState, setTestState] = useState(0);
     const onChange = (dates) => {
         const [start, end] = dates;
         setStartDate(start);
@@ -177,7 +176,7 @@ export default function Reports() {
                     <ReactECharts option={option}></ReactECharts>
                 </div>
                 <div id="seriesContainer" style={{ position: 'relative' }} className="container col-span-1 rows-start-2 gap-px pl-10">
-                    <button id="newSeriesBox" style={{ position: 'relative' }} className="border border-black h-40 w-40 text-center content-center rounded-lg border-radius: 500px" onClick={() => addLine()}>+</button>
+                    <button id="newSeriesBox" style={{ position: 'relative' }} className="border border-black h-40 w-40 text-center content-center rounded-lg border-radius: 500px text-3xl" onClick={() => addLine()}>+</button>
                     <DatePicker
                         selected={startDate}
                         onChange={onChange}

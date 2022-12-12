@@ -5,6 +5,8 @@ import { init, getInstanceByDom } from "echarts";
 import { getDefaultCompilerOptions } from 'typescript';
 import { DataSeriesBox } from '../components/DataSeriesBox.js';
 import ReactDOM from 'react-dom';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 export default function Reports() {
@@ -120,16 +122,42 @@ export default function Reports() {
     const [usageData, setUsageData] = React.useState(null)
     const [isLoaded, setIsLoaded] = React.useState(false)
     const [isDownloading, setIsDownloading] = React.useState(true)
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [startNum, setStartNum] = useState(0);
+    const [endNum, setEndNum] = useState(0);
+    const [testState, setTestState] = useState(0);
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+        setStartNum(daysSinceStartOfYear(start))
+        setEndNum(daysSinceStartOfYear(end))
+        addLine()
+
+    };
 
     function getData() {
         console.log("hello")
-        fetch('http://localhost:3000/api/flow/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation")).then(async (response) => {
+        fetch('http://localhost:3000/api/flow/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation") + "&startDate=" + startNum + "&endDate=" + endNum).then(async (response) => {
             setUsageData(await response.json())
             console.log("2")
             setIsDownloading(false)
         })
     }
+    function daysSinceStartOfYear(date) {
+        // Create a Date object for the start of the year
+        const startOfYear = new Date("2020/01/01");
 
+        // Calculate the difference between the two dates in milliseconds
+        const differenceInTime = new Date(date).getTime() - startOfYear.getTime();
+
+        // Convert the difference in time to days and multiply by 48
+        const daysSinceStartOfYear = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
+
+        // Return the result
+        return daysSinceStartOfYear;
+    }
     React.useEffect(() => {
         if (!isLoaded) {
             getData()
@@ -154,6 +182,7 @@ export default function Reports() {
         setOption(sankeyOption)
     }
     function addLine() {
+        getData()
         let totalIn = usageData.data.CHP1 + usageData.data.CHP2 + usageData.data.gridIn
         totalIn -= usageData.data.gridOut
         let heating = Math.random() * totalIn*0.5
@@ -253,11 +282,21 @@ export default function Reports() {
             {!isDownloading && <div className="grid grid-cols-11 grid-rows-2 gap-5 m-8 transition-opacity ease-in duration-700 w-full">
                 <script src="../path/to/flowbite/dist/flowbite.js"></script>
                 <div id="graph" className="container items-stretch flex-row text-center pt-5 col-span-7">
-                    <h3 className="text-4xl font-bold">Reports</h3>
+                    <h3 className="text-4xl font-bold">Energy Flow</h3>
                     <ReactECharts option={option}></ReactECharts>
                 </div>
                 <div id="seriesContainer" style={{ position: 'relative' }} className="container col-span-1 rows-start-2 gap-px pl-10">
-                    <button id="newSeriesBox" style={{ position: 'relative' }} className="border border-black h-40 w-40 text-center content-center rounded-lg border-radius: 500px" onClick={() => addLine([Math.floor(Math.random() * 301), Math.floor(Math.random() * 301), Math.floor(Math.random() * 301), Math.floor(Math.random() * 301), Math.floor(Math.random() * 301), Math.floor(Math.random() * 301), Math.floor(Math.random() * 301)])}>+</button>
+                    <button id="newSeriesBox" style={{ position: 'relative' }} className="border border-black h-40 w-40 text-center content-center rounded-lg border-radius: 500px text-3xl" onClick={() => addLine()}>+</button>
+                    <DatePicker
+                        className="pt-5"
+                        selected={startDate}
+                        onChange={onChange}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectsRange
+                        inline
+                        openToDate={new Date("2020/01/01")}
+                    />
                 </div>
                 <button onClick={() => setSankey()}>Sankey</button>
             </div>
