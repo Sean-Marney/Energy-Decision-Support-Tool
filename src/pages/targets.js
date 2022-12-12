@@ -5,23 +5,62 @@ import Card from "../components/ui/Card"
 import {Button} from "../components/ui/Button"
 
 import { FaEdit } from "react-icons/fa";
+import ShowTargets from "../components/target/ShowTargets";
+import ModifyTargets from "../components/target/ModifyTargets";
 
 export default function Targets({data}) {
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+       c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  const [targetsData, setTargetsData] = React.useState([])
+
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isDownloading, setIsDownloading] = React.useState(true)
+
+  const [editMode, setEditMode] = React.useState(false)
+
+  function getData(){
+    fetch('http://localhost:3000/api/target?site=' + getCookie("site")).then(async (response) => {
+      const body = await response.json()
+      setTargetsData(body)
+      setIsDownloading(false)
+    })
+  }
+
+  function modificationFunction(index, value){
+    alert(value)
+    let temp = targetsData
+    temp[index].value = value
+    setTargetsData(temp)
+  }
+
+  React.useEffect(() => {
+    if(!isLoaded){
+      getData()
+      setIsLoaded(true)
+    }
+  }, [])
 
   return (
     <Card className="m-8 w-full">
       <div className="grid grid-cols-2">
         <div className="col-span-1">
           <h1 className="text-5xl afterline mb-12">Targets</h1>
-          <TargetDisplay name="Energy consumption" value="1,000 kW" />
-          <TargetDisplay name="Cost" value="£1,000" />
-          <TargetDisplay name="Carbon emissions" value="1,000 CO₂e" />
-          <Button>
-            <div className="flex-row flex">
-              <FaEdit className="mr-3" size="1.75rem" color="#FFFFFF" />
-              <strong>Edit</strong>
-            </div>
-          </Button>
+          { !editMode && <ShowTargets targets={ targetsData } editModeToggle={ setEditMode } /> }
+          { editMode && <ModifyTargets targets={ targetsData } editModeToggle={ setEditMode } modificationFunction={ modificationFunction } /> }
         </div>
         <div className="col-span-1">
           <h1 className="text-5xl afterline">Progress</h1>
