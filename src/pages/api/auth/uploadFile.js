@@ -15,20 +15,21 @@ async function saveFile(file, site, organisation,title){
 
     const data = fs.readFileSync(file.path);
     const mainDirectory = path.join(process.cwd(),"/..");
-    const postsDirectory = path.join(mainDirectory, 'energyData/',organisation,"/",site,"/");
-    const fullPath = path.join(postsDirectory,title);
+    // const postsDirectory = path.join(mainDirectory, 'res/',organisation,"/",site,"/",title);
+    let postsDirectory = path.join(mainDirectory, 'res/',organisation)
     try {
-      if (!fs.existsSync(path.join(mainDirectory, 'energyData/',organisation))) {
-        fs.mkdirSync(path.join(mainDirectory, 'energyData/',organisation));
+      if (!fs.existsSync(postsDirectory)) {
+        fs.mkdirSync(postsDirectory);
       }
-      if (!fs.existsSync(path.join(mainDirectory, 'energyData/',organisation,"/",site))) {
-          fs.mkdirSync(path.join(mainDirectory, 'energyData/',organisation,"/",site));
+      postsDirectory = path.join(postsDirectory,"/",site)
+      if (!fs.existsSync(path.join(postsDirectory))) {
+          fs.mkdirSync(path.join(postsDirectory));
       }
+      postsDirectory = path.join(postsDirectory,"/",title)
     } catch (err) {
-      alert(err);
       console.error(err);
     }
-    fs.writeFileSync(fullPath, data);
+    fs.writeFileSync(postsDirectory, data);
     await fs.unlinkSync(file.path);
     return;
   } catch (error) {
