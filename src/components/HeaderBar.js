@@ -8,9 +8,11 @@ import React, { useState } from 'react';
 export default function HeaderBar({children}) {
   const [organisation, setOrganisationState] = useState();
   const [site, setSiteState] = useState();
+  const [options, setOptions] = useState([]);
   const [sitesOption, setSitesOption] = React.useState([])
   const [organisationOption, setOrganisationOption] = React.useState([])
   const router = useRouter()
+  const [org, setOrg] = React.useState()
 
   function getCookie(cname) {
     let name = cname + "=";
@@ -44,39 +46,40 @@ export default function HeaderBar({children}) {
     setCookie("site", value, 1);
     setSiteState(value);
   }
-
-  function readSiteForOrganisation(org){
-    fetch('http://localhost:3000/api/site/get?organisation=' + org).then(async (response) => {
-      const body = await response.json()
-      let sites = body.sites;
-      setSitesOption(sites.map(site => <option value={site.id} id={site.name}>{site.name}</option>))
-    })
-  }
-  function readOrganisations(){
+  function readOptions(){
     fetch('http://localhost:3000/api/organisations/get').then(async (response) => {
       const body = await response.json()
       let organisations = body.organisations;
-      setOrganisationOption(organisations.map(organisation => <option value={organisation.id} id={organisation.name}>{organisation.name}</option>))
-      setOrganisation(organisations[0].id);
-      readSiteForOrganisation();
+      setOptions(organisations);
+      setOrganisationOption(organisations.map((org) => <option value={org.id} id={org.name}>{org.name}</option>))
+      if (getCookie("organisation") == ""){
+        setOrganisation(organisations[0].id);
+        setSitesOption(organisations[0].Site.map(site => <option value={site.id} id={site.name}>{site.name}</option>))  
+        setSite(organisations[0].Site[0].id);  
+      }else{
+        let id = (parseInt(getCookie("organisation")));
+        let newOrg = organisations.find(org => org.id == id);
+        let sites = newOrg.Site;
+        setSitesOption(sites.map(site => <option value={site.id} id={site.name}>{site.name}</option>))
+        let siteID = (parseInt(getCookie("site")));
+        let newSite = (sites.find(site => site.id == siteID));
+        setSite(newSite.id);
+        setOrganisation(parseInt(newOrg.id));
+      }
     })
   }    
-  function handleSiteChange(org,value){
-    setSite(value);
-  }
   function handleOrganisationChange(value){
-    readOrganisations();
-    setOrganisation(value);
+    let newOrg = options.find(org => org.id == value);
+    setOrganisation(newOrg.id);
+    setSitesOption(newOrg.Site.map(site => <option value={site.id} id={site.name}>{site.name}</option>))
+    setSite(newOrg.Site[0].id);
   }
-
-  function setUp(){
-    let org = getCookie("organisation");
-    handleOrganisationChange(org);
-    handleSiteChange(org, getCookie("site"));
+  function handleSiteChange(value){
+    setSite(value);
   }
 
   React.useEffect(() => {
-    setUp();
+    readOptions();
   }, [])
   return (
     <>
@@ -88,10 +91,10 @@ export default function HeaderBar({children}) {
           { /* Form elements */ }
           <div className="w-full">
             <div className="text-right">
-              <select type="text" className="text-2xl border-2 bg-white px-2" value={ organisation } onChange={ (e) => {handleOrganisationChange(e.target.value)} }>
+              <select type="text" className="text-2xl border-2 bg-white px-2" value={organisation} onChange={ (e) => {handleOrganisationChange(e.target.value)} }>
                 {organisationOption}
               </select>
-              <select type="text" className="ml-4 text-2xl border-2 bg-white px-2" onChange={ (e) => {handleSiteChange(e.target.value)} }>
+              <select type="text" className="ml-4 text-2xl border-2 bg-white px-2" value={site} onChange={ (e) => {handleSiteChange(e.target.value)} }>
                 {sitesOption}
               </select>
             </div>
