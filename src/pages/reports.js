@@ -102,7 +102,7 @@ export default function Reports() {
         }
     };
     let [option, setOption] = useState(lineOption)
-
+    let dataLength = 0
     const [usageData, setUsageData] = React.useState(null)
     const [isLoaded, setIsLoaded] = React.useState(false)
     const [isDownloading, setIsDownloading] = React.useState(true)
@@ -110,16 +110,14 @@ export default function Reports() {
     const [endDate, setEndDate] = useState(null);
     const [startNum, setStartNum] = useState(0);
     const [endNum, setEndNum] = useState(0);
+    const [testState, setTestState] = useState(0);
     const onChange = (dates) => {
         const [start, end] = dates;
         setStartDate(start);
         setEndDate(end);
         setStartNum(daysSinceStartOfYear(start))
         setEndNum(daysSinceStartOfYear(end))
-        if (startNum >= 0 && endNum > 0) {
-            getData()
-            addLine()
-        }
+        addLine()
 
     };
 
@@ -163,10 +161,7 @@ export default function Reports() {
         // return the array
         return array;
     }
-    function addLine() {
-        setStartDate(daysSinceStartOfYear(startDate))
-        setEndDate(daysSinceStartOfYear(endDate))
-        console.log(startDate, endDate)
+    function addLine(num) {
         getData()
         let myData = usageData.data
         setOption(prevState => ({

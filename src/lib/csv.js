@@ -78,7 +78,7 @@ function readEnergyUsage(content, start, end) {
     }
     console.log(numberOfDays)
     console.log("start",start,"end",end)
-    for (let i = start; i < end; i++) {
+    for (let i = start; i <= end; i++) {
         for (let j = 1; j < 49; j++) {
             console.log("i",i,"j",j)
             dailyUsage = 0
