@@ -1,27 +1,29 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-import { calculateEnergyData } from '../../../lib/csv';
+import { calculateEnergyData } from '../../lib/csv';
 
 export default async function handler(req, res) {
-    if(!Object.keys(req.query).includes("organisation") || !Object.keys(req.query).includes("site")){
+    if(!Object.keys(req.query).includes("site")){
         res.status(400).json({error: "Missing query parameters"});
     }
 
-    let organisationID = req.query.organisation;
-    let site = req.query.site;
+    let siteID = req.query.site;
 
     let targets
 
-    //Get organisation
-    const organisation = await prisma.organisation.findUnique({
+    //Get site
+    const site = await prisma.site.findUnique({
         where: {
-            id: parseInt(organisationID)
+            id: parseInt(siteID)
+        },
+        include: {
+            organisation: true
         }
     })
     
-    if(!organisation){
-        res.status(400).json({error: "Organisation not found"})
+    if(!site){
+        res.status(400).json({error: "Site not found"})
     }
 
 
@@ -29,8 +31,7 @@ export default async function handler(req, res) {
     try {
         targets = await prisma.target.findMany({
             where: {
-                organisationID: parseInt(organisationID),
-                siteID: parseInt(site)
+                siteID: parseInt(siteID)
             }
         })
     } catch(err){
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
     })
 
     //Get KPIs
-    const energyData = calculateEnergyData(organisation.name)
+    const energyData = calculateEnergyData(site.organisation.name)
 
     res.json({
         "targets": kpiTargets,

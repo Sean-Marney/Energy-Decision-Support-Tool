@@ -5,7 +5,6 @@ export default async function handler(req, res) {
         res.status(400).json({error: "Missing query parameters"});
     }
 
-    let organisationID = req.query.organisation;
     let site = req.query.site;
 
     let optimisations
@@ -14,7 +13,6 @@ export default async function handler(req, res) {
     try {
         optimisations = await prisma.optimisation.findMany({
             where: {
-                organisationID: parseInt(organisationID),
                 siteID: parseInt(site)
             }
         })

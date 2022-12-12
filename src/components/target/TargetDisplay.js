@@ -5,13 +5,13 @@ export default function TargetDisplay({ title, value, name }){
     let postfix = ""
 
     switch(name) {
-        case "energy":
+        case "usage":
             postfix = " kWh"
             break;
         case "cost":
             prefix = "£"
             break
-        case "carbon":
+        case "carbonEmissions":
             postfix = " tCO₂e"
             break
     }
