@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Button } from "../components/ui/Button";
 import { TextField } from "../components/ui/TextField";
-import { Card } from "../components/ui/Card";
+import Card from "../components/ui/Card";
 
 export default function Login() {
   const [show, setShow] = useState(false);
