@@ -14,6 +14,40 @@ function readCSVFile(organisation) {
     return -1;
   }
 }
+function readEnergyUsage(content) {
+    let numberOfDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    // Gathers all the relevant energy data for the last week and last month from the csv file 
+    // Collecting the energy consumption, energy cost and carbon emissions
+    let usageByDate = []
+    // Iterates through the last month and weeks data
+    let date = content[content.length - 2].split(",")[0];
+    let month = date.substring(3, 5);
+    let numberOfDays = 0;
+    let dailyUsage;
+    if (isNaN(month) == true || (parseInt(month) < 0 || parseInt(month) > 12)) {
+        numberOfDays = 30
+    } else {
+        let year = date.substring(6, 10);
+        numberOfDays = numberOfDaysInMonth[parseInt(month) - 1];
+        if (parseInt(month) == 2 && parseInt(year) % 4) {
+            numberOfDays = 29;
+        }
+    }
+    console.log(numberOfDays)
+    for (let i = 0; i < numberOfDays; i++) {
+        for (let j = 1; j < 49; j++) {
+            console.log("i",i,"j",j)
+            dailyUsage = 0
+            let index = i * 48 + j
+            let energyData = content[index].split(",");
+            dailyUsage += (parseFloat(energyData[11]))   
+            console.log(dailyUsage)
+        }
+        usageByDate.push(dailyUsage)
+    }
+    return usageByDate
+}
+
 
 function readEnergyData(content) {
   let numberOfDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -69,6 +103,16 @@ function readEnergyData(content) {
     }
   }
 }
+export function calculateEnergyUsage(organisation) {
+    // Opens the data file and reads the data from within
+    let content = readCSVFile(organisation);
+    if (content == -1) {
+        return []
+    } else {
+        let data = readEnergyUsage(content);
+        return data;
+    }
+};
 
 export function calculateEnergyData(organisation) {
   // Opens the data file and reads the data from within

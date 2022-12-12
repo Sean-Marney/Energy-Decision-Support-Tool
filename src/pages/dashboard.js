@@ -33,6 +33,7 @@ export default function Dashboard() {
   const [isDownloading, setIsDownloading] = React.useState(true)
 
   function getData(){
+    console.log(getCookie("site"),getCookie("organisation"))
     fetch('http://localhost:3000/api/kpi/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation")).then(async (response) => {
       setKpiData(await response.json())
       setIsDownloading(false)
