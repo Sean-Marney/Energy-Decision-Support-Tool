@@ -19,6 +19,7 @@ From a development POV, Next.js is fantastic to work with because both elements 
 Next.js: https://nextjs.org/
 React: https://reactjs.org/
 Node.js: https://nodejs.org/
+Prisma: https://www.prisma.io/docs/ 
 
 React and Next rely heavily on webpack. It's really useful to learn how it compiles as it can help you make sensible design decisions:
 https://webpack.js.org/
@@ -38,3 +39,33 @@ https://echarts.apache.org/en/index.html
 2. Clone the repo (`git clone git@git.cardiff.ac.uk:c2012125/deorsum.git`)
 3. Install modules (`npm install`)
 4. Build! 🔨 (`next build`)
+
+# Styles
+### Colour codes
+
+Name                    | Code
+-------------           | -------------
+Cardiff University Red  | #D4374A
+Cardiff University Blue | #2B344D
+NHS Blue                | #0171BA
+
+
+### Prototype screenshots 
+Login                      | Admin Panel
+-------------              | -------------
+![Login.PNG](./Login.PNG)  | ![Admin Panel.PNG](./Admin Panel.PNG)
+
+Dashboard                          | Reports
+-------------                      | -------------
+![Dashboard.PNG](./Dashboard.PNG)  | ![Reports.PNG](./Reports.PNG)
+
+Optimisation                             | Targets
+-------------                            | -------------
+![Optimisation.PNG](./Optimisation.PNG)  | ![Targets.PNG](./Targets.PNG)
+
+
+Energy Flow                              | Bill Validation
+-------------                            | -------------
+![Energy flow.PNG](./Energy flow.PNG)    | ![Bill Validation.PNG](./Bill Validation.PNG)
+
+
