@@ -9,35 +9,36 @@ export default async function handler(req, res) {
     }
 
     let organisationID = req.query.organisation;
-    let site = req.query.site;
+    let siteID = req.query.site;
 
     let targets
 
     //Get organisation
-    const organisation = await prisma.organisation.findUnique({
+    const site = await prisma.site.findUnique({
         where: {
             id: parseInt(organisationID)
+        },
+        include: {  
+            organisation: true
         }
     })
-
-    if(!organisation){
-        res.status(400).json({error: "Organisation not found"})
+    if(!site){
+        res.status(400).json({error: "Organisation or site not found"})
     }
-
 
     //Get targets
     try {
         targets = await prisma.target.findMany({
             where: {
-                organisationID: parseInt(organisationID),
-                siteID: parseInt(site)
+                organisationID: parseInt(site.organisation.id),
+                siteID: parseInt(site.id)
             }
         })
     } catch(err){
         console.log(err)
         res.status(500).json({error: "Error reading targets from database"})
     }
-
+    console.log(targets);
     //Prepare KPI targets
     let kpiTargets = {"weekly": {}, "monthly": {}}
     targets.forEach((target) => {
@@ -49,10 +50,8 @@ export default async function handler(req, res) {
             }
         }
     })
-
     //Get KPIs
-    const energyData = calculateEnergyData(organisation.name)
-
+    const energyData = await calculateEnergyData(site.organisation.name, site.name)
     res.json({
         "targets": kpiTargets,
         "actual": energyData

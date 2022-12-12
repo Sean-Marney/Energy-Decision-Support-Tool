@@ -2,23 +2,55 @@ import Head from "next/head";
 import styles from "../../../../styles/Form.module.css";
 import { useState, useRef } from "react";
 import { useRouter} from "next/router";
-import { getSession } from "next-auth/react";
-import { readSites } from "../../../../lib/database_functions";
 import { FaFileCsv } from 'react-icons/fa';
 import { MdDriveFileRenameOutline } from 'react-icons/Md';
 import {GrMapLocation} from 'react-icons/Gr';
-import { getUsers } from "../../../../service/getUsers";
+import React from "react";
 
-export default function UploadEnergyData({data}) {
+export default function UploadEnergyData() {
   const [selectedFile, setSelectedFile] = useState();
+  const [sitesOption, setSitesOption] = React.useState([])
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isDownloading, setIsDownloading] = React.useState(true)
   const router = useRouter();
   const { orgName } = router.query;
-  const sitesOption = data.map(site => <option value={site.name} id={site.name}>{site.name}</option>);
   const title = useRef();
   const file = useRef();
   const site = useRef();
-  
   let validTitle =  false;
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+       c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function getData(){
+    fetch('http://localhost:3000/api/site/get?organisation=' + getCookie("organisation")).then(async (response) => {
+      const body = await response.json()
+      let sites = body.sites;
+      setSitesOption(sites.map(site => <option value={site.name} id={site.name}>{site.name}</option>))
+      setIsDownloading(false)
+    })
+  }
+  React.useEffect(() => {
+    if(!isLoaded){
+      getData()
+      setIsLoaded(true)
+    }
+  }, [])
+
+
 
   // Function to handle the file upload
   function onFileChange (){
@@ -159,25 +191,4 @@ export default function UploadEnergyData({data}) {
       </section>
     </div>
   );
-}
-
-// Protects route
-export async function getServerSideProps(context) {
-  let req = context.req;
-  const session = await getSession({req});
-  let user = await getUsers(session);
-  if (user.role == "admin"){
-    const data = await readSites(context.params.orgName);
-    return {
-      props: {session,data}
-    };
-  }  
-  else{
-    return {
-      redirect: {
-        destination: "/dashboard",
-        permanent: false,
-      },
-    };  
-  }  
 }

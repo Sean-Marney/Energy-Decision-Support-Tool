@@ -1,7 +1,6 @@
 const fs = require('fs');
 const csv = require('@fast-csv/parse');
 import path from 'path';
-import Papa from 'papaparse';
 const postsDirectory =  path.join(process.cwd(),"/..");
 
 function fastCSV(organisation,site){
@@ -12,7 +11,6 @@ function fastCSV(organisation,site){
   if (file == -1){
     return -1;
   }else{
-    console.log(dir);
     dir = path.join(dir,"/",file);
     return new Promise(resolve => { csv.parseFile(dir)
       .on('error', error => console.error(error))
@@ -78,17 +76,26 @@ function readEnergyData(content) {
       index = index + 1;
   }
   // Returns the cost, energy usage, carbon emission and target comparsion from the last month and week
-  let monthlyData = {"energyUsage":Math.round(monthlyUsage),"energyCost":Math.round(monthlyCost),"carbonEmissions":"40"}; 
-  let weeklyData = {"energyUsage":Math.round(weeklyUsage),"energyCost":Math.round(weeklyCost),"carbonEmissions":"10"};
-  return {"monthlyData":monthlyData,"weeklyData":weeklyData};
+  return {
+    "weekly": {
+      "usage": Math.round(weeklyUsage),
+      "cost": Math.round(weeklyCost),
+      "carbonEmissions": 10
+    },
+    "monthly": {
+      "usage": Math.round(monthlyUsage),
+      "cost": Math.round(monthlyCost),
+      "carbonEmissions": 40
+    }
+  }
 }
 export async function calculateEnergyData(organisation, site) {
   // Opens the data file and reads the data from within
   // let content = await readCSVFile(organisation,  site);
-  let content = (await fastCSV(organisation,site));
+  let content = (await fastCSV(organisation,site ));
   // console.log(content);
   if(content  == - 1){
-    return {"monthlyData":{"energyUsage":0,"energyCost":0,"carbonEmissions":0},"weeklyData":{"energyUsage":0,"energyCost":0,"carbonEmissions":0}};
+    return {"monthly":{"usage":0,"cost":0,"carbonEmissions":0},"weekly":{"usage":0,"cost":0,"carbonEmissions":0}};
   }else{
     let data = readEnergyData(content);
     return data;

@@ -77,7 +77,7 @@ export async function readSites(organisationName){
   try {
       sites = await prisma.site.findMany({
         where: {
-          organisation: organisationName
+          id: organisationName
         }, select: {
           name: true,
         },
