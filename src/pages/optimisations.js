@@ -30,6 +30,7 @@ export default function Optimisations({data}) {
   function getData(){
     fetch('http://localhost:3000/api/optimisation/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation")).then(async (response) => {
       const body = await response.json()
+
       setOptimisationsArchivedData(body.filter((optimisation) => optimisation.archived === true))
       setOptimisationsUnarchivedData(body.filter((optimisation) => optimisation.archived === false))
       setIsDownloading(false)
@@ -38,6 +39,7 @@ export default function Optimisations({data}) {
 
   React.useEffect(() => {
     if(!isLoaded){
+      alert(hello);
       getData()
       setIsLoaded(true)
     }

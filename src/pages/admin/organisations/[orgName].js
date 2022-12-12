@@ -60,6 +60,14 @@ export default function Organisation({ getUsers }) {
           Add New Optimisation
         </Link>
       </div>
+      <div className="flex justify-center">
+        <Link
+          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50"
+          href={`/admin/organisations/upload/${orgName}`}
+        >
+          Upload Energy Data
+        </Link>
+      </div>
 
       <div className="text-xl text-center">
         <br />
