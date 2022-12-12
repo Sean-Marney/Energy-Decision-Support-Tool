@@ -51,6 +51,7 @@ export async function readTargets(organisationID){
       // Returns the data
       return data;
 }
+
 // Function to read the optimisations for the organisation
 export async function readUnArchivedOptimisations(organisationID) {
   // Reads unarchived optimisations in the database
@@ -69,8 +70,23 @@ export async function readUnArchivedOptimisations(organisationID) {
   }
   return optimisations;
 }
-
-// Function to read the optimisations for the organisation
+// Function to read the sites for an organisation
+export async function readSites(organisationName){
+  // Reads unarchived optimisations in the database
+  let sites;  
+  try {
+      sites = await prisma.site.findMany({
+        where: {
+          id: organisationName
+        }, select: {
+          name: true,
+        },
+      });
+    } catch (error) {
+        console.log(error);
+    };
+  return sites;
+}
 export async function readArchivedOptimisations(organisationID) {
   // Reads unarchived optimisations in the database
   let optimisations;
