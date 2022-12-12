@@ -6,7 +6,7 @@ const postsDirectory =  path.join(process.cwd(),"/..");
 function fastCSV(organisation,site){
   const data = [];
   let energyData;
-  let dir = path.join(postsDirectory,"energyData/",organisation,"/",site);
+  let dir = path.join(postsDirectory,"res/",organisation,"/",site);
   let file = getMostRecentFile(dir);
   if (file == -1){
     return -1;
