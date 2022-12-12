@@ -1,12 +1,32 @@
 import Image from 'next/image'
-
+import { useSession } from "next-auth/react"
 import ClientLogo from '../res/img/cardiff_uni_logo.png'
+import { useRouter } from 'next/router'
 
 import React, { useState } from 'react';
 
 export default function HeaderBar({children}) {
-  const [organisation, setOrganisationState] = useState("Cardiff University");
-  const [site, setSiteState] = useState("Abacws Building");
+  const [organisation, setOrganisationState] = useState();
+  const [site, setSiteState] = useState();
+  const [sitesOption, setSitesOption] = React.useState([])
+  const [organisationOption, setOrganisationOption] = React.useState([])
+  const router = useRouter()
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+       c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
   function setCookie(cname, cvalue, exdays) {
       const d = new Date();
@@ -25,11 +45,39 @@ export default function HeaderBar({children}) {
     setSiteState(value);
   }
 
-  React.useEffect(() => {
-    setOrganisation(1)
-    setSite(1)
-  }, [])
+  function readSiteForOrganisation(org){
+    fetch('http://localhost:3000/api/site/get?organisation=' + org).then(async (response) => {
+      const body = await response.json()
+      let sites = body.sites;
+      setSitesOption(sites.map(site => <option value={site.id} id={site.name}>{site.name}</option>))
+    })
+  }
+  function readOrganisations(){
+    fetch('http://localhost:3000/api/organisations/get').then(async (response) => {
+      const body = await response.json()
+      let organisations = body.organisations;
+      setOrganisationOption(organisations.map(organisation => <option value={organisation.id} id={organisation.name}>{organisation.name}</option>))
+      setOrganisation(organisations[0].id);
+      readSiteForOrganisation();
+    })
+  }    
+  function handleSiteChange(org,value){
+    setSite(value);
+  }
+  function handleOrganisationChange(value){
+    readOrganisations();
+    setOrganisation(value);
+  }
 
+  function setUp(){
+    let org = getCookie("organisation");
+    handleOrganisationChange(org);
+    handleSiteChange(org, getCookie("site"));
+  }
+
+  React.useEffect(() => {
+    setUp();
+  }, [])
   return (
     <>
       { /* Header bar */ }
@@ -40,11 +88,11 @@ export default function HeaderBar({children}) {
           { /* Form elements */ }
           <div className="w-full">
             <div className="text-right">
-              <select type="text" className="text-2xl border-2 bg-white px-2" value={ organisation } onChange={ (e) => {setOrganisation(e.target.value)} }>
-                <option>Cardiff University</option>
+              <select type="text" className="text-2xl border-2 bg-white px-2" value={ organisation } onChange={ (e) => {handleOrganisationChange(e.target.value)} }>
+                {organisationOption}
               </select>
-              <select type="text" className="ml-4 text-2xl border-2 bg-white px-2" value={ site } onChange={ (e) => {setSite(e.target.value)} }>
-                <option>Abacws Building</option>
+              <select type="text" className="ml-4 text-2xl border-2 bg-white px-2" onChange={ (e) => {handleSiteChange(e.target.value)} }>
+                {sitesOption}
               </select>
             </div>
           </div>
