@@ -1,11 +1,12 @@
 // Page for users not logged in
 import React, { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
+import DatePicker from "react-datepicker";
 import { init, getInstanceByDom } from "echarts";
 import { getDefaultCompilerOptions } from 'typescript';
 import { DataSeriesBox } from '../components/DataSeriesBox.js';
 import ReactDOM from 'react-dom';
-
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Reports() {
     function getCookie(cname) {
@@ -105,22 +106,50 @@ export default function Reports() {
     const [usageData, setUsageData] = React.useState(null)
     const [isLoaded, setIsLoaded] = React.useState(false)
     const [isDownloading, setIsDownloading] = React.useState(true)
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [startNum, setStartNum] = useState(0);
+    const [endNum, setEndNum] = useState(0);
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+        setStartNum(daysSinceStartOfYear(start))
+        setEndNum(daysSinceStartOfYear(end))
+        if (startNum >= 0 && endNum > 0) {
+            getData()
+            addLine()
+        }
+
+    };
 
     function getData() {
         console.log("hello")
-        fetch('http://localhost:3000/api/usage/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation")).then(async (response) => {
+        fetch('http://localhost:3000/api/usage/get?site=' + getCookie("site") + "&organisation=" + getCookie("organisation")+"&startDate="+startNum+"&endDate="+endNum).then(async (response) => {
             setUsageData(await response.json())
             console.log("2")
             setIsDownloading(false)
         })
     }
-
     React.useEffect(() => {
         if (!isLoaded) {
             getData()
             setIsLoaded(true)
         }
     }, [])
+    function daysSinceStartOfYear(date) {
+        // Create a Date object for the start of the year
+        const startOfYear = new Date("2020/01/01");
+
+        // Calculate the difference between the two dates in milliseconds
+        const differenceInTime = new Date(date).getTime() - startOfYear.getTime();
+
+        // Convert the difference in time to days and multiply by 48
+        const daysSinceStartOfYear = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
+
+        // Return the result
+        return daysSinceStartOfYear;
+    }
     function populateArray(n) {
         // create an empty array
         const array = [];
@@ -135,6 +164,10 @@ export default function Reports() {
         return array;
     }
     function addLine() {
+        setStartDate(daysSinceStartOfYear(startDate))
+        setEndDate(daysSinceStartOfYear(endDate))
+        console.log(startDate, endDate)
+        getData()
         let myData = usageData.data
         setOption(prevState => ({
             prevState, xAxis: { type: 'category', data: populateArray(myData.length) }, series: [...prevState.series, { data: myData, type: 'line' }]
@@ -150,6 +183,15 @@ export default function Reports() {
                 </div>
                 <div id="seriesContainer" style={{ position: 'relative' }} className="container col-span-1 rows-start-2 gap-px pl-10">
                     <button id="newSeriesBox" style={{ position: 'relative' }} className="border border-black h-40 w-40 text-center content-center rounded-lg border-radius: 500px" onClick={() => addLine()}>+</button>
+                    <DatePicker
+                        selected={startDate}
+                        onChange={onChange}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectsRange
+                        inline
+                        openToDate={new Date("2020/01/01")}
+                    />
                 </div>
             </div>
             }
