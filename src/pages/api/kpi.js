@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     })
 
     //Get KPIs
-    const energyData = calculateEnergyData(site.organisation.name)
+    const energyData = await calculateEnergyData(site.organisation.name, site.name)
 
     res.json({
         "targets": kpiTargets,

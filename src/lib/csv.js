@@ -3,7 +3,7 @@ const csv = require('@fast-csv/parse');
 import path from 'path';
 const postsDirectory =  path.join(process.cwd(),"/..");
 
-function fastCSV(organisation,site){
+function fastCSV(organisation, site){
   const data = [];
   let energyData;
   let dir = path.join(postsDirectory,"res/",organisation,"/",site);
@@ -92,7 +92,8 @@ function readEnergyData(content) {
 export async function calculateEnergyData(organisation, site) {
   // Opens the data file and reads the data from within
   // let content = await readCSVFile(organisation,  site);
-  let content = (await fastCSV(organisation,site ));
+  let content = (await fastCSV(organisation,site))
+  
   // console.log(content);
   if(content  == - 1){
     return {"monthly":{"usage":0,"cost":0,"carbonEmissions":0},"weekly":{"usage":0,"cost":0,"carbonEmissions":0}};
