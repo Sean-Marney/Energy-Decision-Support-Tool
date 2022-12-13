@@ -39,7 +39,6 @@ export default function Optimisations({data}) {
 
   React.useEffect(() => {
     if(!isLoaded){
-      alert(hello);
       getData()
       setIsLoaded(true)
     }
