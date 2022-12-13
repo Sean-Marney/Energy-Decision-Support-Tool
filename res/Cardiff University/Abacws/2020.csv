@@ -1,4 +1,4 @@
-,CHP1_Electricity_Generation_(kW),CHP2_Electricity_Generation_(kW),CHP1_Heat_Output_(kW),CHP2_Heat_Output_(kW),Boiler_Heat_Output_(kW),Feels-Like Temperature Deg C,Wind Speed ms,Site_Electricity_Demand_(kW),Day ahead UK electricity price,Site_Heat_Demand_(kW),Import_Electricity_(kW),Export_Electricity_(kW)
+Date,CHP1_Electricity_Generation_(kW),CHP2_Electricity_Generation_(kW),CHP1_Heat_Output_(kW),CHP2_Heat_Output_(kW),Boiler_Heat_Output_(kW),Feels-Like Temperature Deg C,Wind Speed ms,Site_Electricity_Demand_(kW),Day ahead UK electricity price,Site_Heat_Demand_(kW),Import_Electricity_(kW),Export_Electricity_(kW)
 2020-01-01 00:00:00,0.0,1489.74609375,0.0,2343.75,232.5581395348837,1.2,2.5,2359.0859654086935,43.45,2576.3081395348836,869.3398716586935,0.0
 2020-01-01 00:30:00,0.0,1488.8020833333333,0.0,2343.75,214.6690518783542,1.2,2.5,2344.1976443957133,42.285,2558.4190518783544,855.39556106238,0.0
 2020-01-01 01:00:00,0.0,1489.9218750000002,0.0,2343.75,199.33554817275748,1.5,3.4,2348.521557669862,41.12,2543.0855481727576,858.5996826698617,0.0

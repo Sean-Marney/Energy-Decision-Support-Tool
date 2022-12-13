@@ -34,3 +34,11 @@ h1, h2, h3, h4, h5, h6 {
     font-family: "FranklinGothicDemi";
     src: url('https://d3q5dbq2rziek.cloudfront.net/3.4.4/webfonts/FranklinGothic-Demi.woff2') format('woff2');
 }
+
+#chartContainer{
+    padding: 9px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    height: 35rem;
+}

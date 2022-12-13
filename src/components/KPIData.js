@@ -40,6 +40,7 @@ export class KPIData extends React.Component {
     }  
   return (
     <div className="my-4">
+      <strong>{this.props.title}</strong>
       <h1 className='font-black text-5xl text-left'>{kpiData}</h1>
       <div className="flex flex-row text-left">   
         <Image

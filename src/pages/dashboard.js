@@ -55,18 +55,18 @@ export default function Dashboard() {
           <div className="col-span-4">
             <Card loading={isDownloading}>
               <KPIContainer title="Site KPIs Last Week">
-                <KPIData data={ kpiData.actual.weekly.usage } targetComparison={ kpiData.targets.weekly.usage || 0 } units="kW"/>
-                <KPIData data={ kpiData.actual.weekly.cost } targetComparison={ kpiData.targets.weekly.cost || 0} units="£"/>
-                <KPIData data={ kpiData.actual.weekly.carbonEmissions } targetComparison={ kpiData.targets.weekly.carbonEmissions || 0 } units="tCO₂e"/>
+                <KPIData data={ kpiData.actual.weekly.usage } targetComparison={ kpiData.targets.weekly.usage || 0 } units="kW" title="Total Energy Consumption"/>
+                <KPIData data={ kpiData.actual.weekly.cost } targetComparison={ kpiData.targets.weekly.cost || 0} units="£" title="Total Cost"/>
+                <KPIData data={ kpiData.actual.weekly.carbonEmissions } targetComparison={ kpiData.targets.weekly.carbonEmissions || 0 } units="tCO₂e" title="Total Est. Carbon Emissions"/>
               </KPIContainer>
             </Card>
           </div>
           <div className="col-span-4">
             <Card loading={isDownloading}>
               <KPIContainer title="Site KPIs Last Month">
-              <KPIData data={ kpiData.actual.monthly.usage } targetComparison={ kpiData.targets.monthly.usage || 0 } units="kW"/>
-                <KPIData data={ kpiData.actual.monthly.cost } targetComparison={ kpiData.targets.monthly.cost || 0} units="£"/>
-                <KPIData data={ kpiData.actual.monthly.carbonEmissions } targetComparison={ kpiData.targets.monthly.carbonEmissions || 0 } units="tCO₂e"/>
+                <KPIData data={ kpiData.actual.monthly.usage } targetComparison={ kpiData.targets.monthly.usage || 0 } units="kW" title="Total Energy Consumption" />
+                <KPIData data={ kpiData.actual.monthly.cost } targetComparison={ kpiData.targets.monthly.cost || 0} units="£" title="Total Cost"/>
+                <KPIData data={ kpiData.actual.monthly.carbonEmissions } targetComparison={ kpiData.targets.monthly.carbonEmissions || 0 } units="tCO₂e" title="Total Est. Carbon Emissions"/>
               </KPIContainer>
             </Card>
           </div>

@@ -7,7 +7,6 @@ import Card from "../components/ui/Card"
 import { Button } from "../components/ui/Button"
 import Pip from "../components/ui/Selector/Pip"
 
-import { FaEdit } from "react-icons/fa";
 import ShowTargets from "../components/target/ShowTargets";
 import ModifyTargets from "../components/target/ModifyTargets";
 import { getCookieParser } from "next/dist/server/api-utils";
