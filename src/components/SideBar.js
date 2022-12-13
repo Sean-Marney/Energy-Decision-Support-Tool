@@ -14,7 +14,7 @@ export default function SideBar() {
             <SideBarItem name="Energy Flow" icon="FaProjectDiagram" path="/flow" />
             <SideBarItem name="Optimisations" icon="TbBulb" path="/optimisations" />
             <SideBarItem name="Targets" icon="TbTarget" path="/targets" />
-            <SideBarItem name="Bill Validation" icon="TbReceipt" path="/bill-validation" />
+            <SideBarItem name="Bill Validation" icon="TbReceipt" path="/bills" />
         </nav>
         <hr></hr>
 
